@@ -2,9 +2,9 @@
 
 ## Process so far 😵‍💫...
 
-- welcome 👋 login or create an account
+1. welcome 👋 login or create an account
     - open file with user list stored
-    a. login
+    1. login
         - username, password
         when user enter a username, it'll look for in file
         - if(username != exisitingUsername)
@@ -12,19 +12,19 @@
           if (password != exsitingUserPassword ) {
             try again or go back
           }(authenticated ✅)
-    b. create account
+    2. create account
         - userId(auto gen), username, password
         - if(username == existingUsername)
             try again or go back
           else(store username and password in file, authenticated ✅)
-- display options:
-    a. create 📝
+2. display options:
+    1. create 📝
         - fileName, privacy setting(public/private)
         - author/username, authorid/userId will automatically be assigned based on who's logged in
         - open a <cardName>.txt file
         - write
         - close
-    b. review 📖
+    2. review 📖
         - myNotes
             - display all file under user database
             - user will select notes based on name
@@ -34,7 +34,7 @@
             - user will select notes based on name
             - output file
         - *Issue: file with same name? I could have user rename file if file already exist OR have user type filename and the author it belongs to 
-    c. quiz ❓
+    3. quiz ❓
         - myNotes
             - display all file under user database
             - user will select notes based on name
@@ -46,5 +46,5 @@
                     - ask user if they got it right (grade += 1) or wrong 
                     - display grade at end, send them back
         - publicNotes
-    d. delete ❌
-    e. update 🙃
+    4. delete ❌
+    5. update 🙃
