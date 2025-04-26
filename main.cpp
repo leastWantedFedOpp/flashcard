@@ -40,7 +40,7 @@ ex. void userExist(string filename, fstream& data, string nameInput, string pass
  - + currentUser - assgin currentUser if user logs in successfully
 */
 
-void userExist(string filename, fstream& data){
+void displayUsers(string filename, fstream& data){
     data.open(filename, ios::in);
     if(data.is_open()){
         string line;
@@ -62,13 +62,61 @@ void userExist(string filename, fstream& data){
     }
 }
 
-void logIn(){
+/*
+ i have a userExist function, i need it for two things:
+    - to log in (check if userExist, if so set currentUser), header should look something like this:
+            void userExist(string filename, fstream& data, string nameInput, string passwordInput, CurrentUser& currentUser, bool login)
+ 
+    - to create account (check if userExist, if so tell main function user aleady exist), header should look something like this:
+            void userExist(string filename, fstream& data, string nameInput, bool login)
+ */
+
+void userExist(string filename, fstream& data, string nameInput, string passwordInput, CurrentUser& currentUser, bool login){
+    data.open(filename, ios::in);
+    if(data.is_open()){
+        string line;
+        getline(data, line);
+        cout << line <<  "\n";
+        while(getline(data, line, ',')){
+            if(line.empty()) continue;
+            User user;
+            user.user.id = stoi(line);
+            getline(data, line, ',');
+            user.user.username = line;
+            getline(data, line);
+            user.password = line;
+            
+            //check if user exist
+            if(user.user.username == nameInput){ //user exist
+                if(login){ //if users is trying to log in
+                    if(user.password == passwordInput){ //compare if password matches with username
+                        currentUser.currentUser.id = user.user.id;
+                        currentUser.currentUser.username = user.user.username;
+                        cout << "Log in successfull :)" << endl;
+                    } else {
+                        cout << "Invalid password :(" << endl;
+                    }
+                }
+                cout << "user already exist, try differnt username"; //if users is creating accout/check if user alredy exist
+            }
+            
+        }
+        data.close();
+    } else {
+        cout << "Unable to open file :(" << endl;
+    }
+}
+
+void logIn(string filename, fstream& data, CurrentUser& currentUser){
     string username, password;
     cout << "Log in" << endl;
     cout << "Username: ";
     cin >> username;
     cout << "Password: ";
     cin >> password;
+    //userExist(filename, data, username, password, currentUser , true);
+
+    
     //look in userData.csv
     //if user is found then take that users info (id, name) and set it to CurrentUser?
     /*
@@ -94,7 +142,11 @@ void createAccount(string filename, fstream& data){
     id = genUserid();
     cout << "Username: ";
     cin >> username;
-    //check if username already exist here :/
+    
+    
+    
+//    userExist(filename, data, username, password, currentUser, false);
+    //if(!userExist){ //if user doesnt exist, then proceed with creating account
     cout << "Password: ";
     cin >> password;
     User newUser = {id, username, password}; //new user is created
@@ -105,6 +157,7 @@ void createAccount(string filename, fstream& data){
     } else {
         cout << "Unable to open file :(" << endl;
     }
+    // else { // cout << "User already exist" << endl; }
     
     /*
     createAccount
@@ -136,6 +189,7 @@ int main(int argc, const char * argv[]) {
         
         if (userInput == 'a') {
             cout << "Logging in..." << endl;
+            logIn("userList.csv", data, currentUser);
             /*
              run auth();
                 - pass currentUser struct (and isAuthenticated?) by reference
@@ -150,7 +204,7 @@ int main(int argc, const char * argv[]) {
         } else if( userInput == 'c') {
             cout << "Exiting..." << endl;
         } else if (userInput == 'd') { //just to view current users from .csv file
-            userExist("userList.csv", data);
+            displayUsers("userList.csv", data);
         } else {
             cout << "Invalid input" << endl;
         }
