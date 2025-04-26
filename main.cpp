@@ -10,13 +10,14 @@ struct UserTemplate{
 };
 
 struct User{ //for creating newUser and foundUser
-    UserTemplate user;
+    UserTemplate user; //id, username
     string password;
 };
 
+//remove currentUser struct and use one of other struct?
 struct CurrentUser{ //for when user is found from db
     UserTemplate currentUser; //id, username
-    bool isAuthenticated; //if authenticated == true has access :) if not no access :(
+//    bool isAuthenticated; //if authenticated == true has access :) if not no access :(
 };
 
 int genUserid(){
@@ -25,8 +26,40 @@ int genUserid(){
     return randGenUserId;
 }
 
-void userExist(){
-    
+/*
+userExist function is going to be used to assign currentUser (login) and see if users exist (signup)
+|_ for login
+    - takes userName - if username already exist, check password that's attatched to username, if user input correct password then assign currentUser
+|_ for signup
+    - takes userName - if usernme already exist,tell user username aready exist and try again
+ 
+add username, password and currentUser struct as additional argument?
+ex. void userExist(string filename, fstream& data, string nameInput, string passwordInput, CurrentUser currentUser)
+ - + nameInput - from login and signup - compare to see if username exist
+ - + passwordInput - from login - compare to see if password match with username
+ - + currentUser - assgin currentUser if user logs in successfully
+*/
+
+void userExist(string filename, fstream& data){
+    data.open(filename, ios::in);
+    if(data.is_open()){
+        string line;
+        getline(data, line);
+        cout << line <<  "\n";
+        while(getline(data, line, ',')){
+            if(line.empty()) continue;
+            User user;
+            user.user.id = stoi(line);
+            getline(data, line, ',');
+            user.user.username = line;
+            getline(data, line);
+            user.password = line;
+            cout << user.user.id << " " << user.user.username << " " << user.password << endl;
+        }
+        data.close();
+    } else {
+        cout << "Unable to open file :(" << endl;
+    }
 }
 
 void logIn(){
@@ -56,7 +89,7 @@ void createAccount(string filename, fstream& data){
     string username, password;
     
     data.open(filename, ios::out | ios::app); //open file to append
-    
+        
     cout << "Create an account" << endl;
     id = genUserid();
     cout << "Username: ";
@@ -64,14 +97,15 @@ void createAccount(string filename, fstream& data){
     //check if username already exist here :/
     cout << "Password: ";
     cin >> password;
-    User newUser = {{id, username}, password}; //new user is created
+    User newUser = {id, username, password}; //new user is created
     if(data.is_open()){
-        data << to_string(newUser.user.id) + "," + newUser.user.username + "," + newUser.password + "\n"; //add new user info inside userList.csv
+        data << to_string(newUser.user.id) + "," + newUser.user.username + "," + newUser.password + "\n";//add new user info inside userList.csv
         cout << "User successfully created" << endl;
         data.close(); //close file
     } else {
         cout << "Unable to open file :(" << endl;
     }
+    
     /*
     createAccount
         |_if username == foundUser.userName
@@ -84,57 +118,24 @@ void createAccount(string filename, fstream& data){
      */
 }
 
-
-void authUser(){
-    //open a file called userList.csv
-    //read
-    char userInput = '\0';
-    bool isAuthenticated = false;
-//    string usersFileName = "userList.csv";
-    
-    fstream data;
-    data.open("userList.csv", ios::out | ios::app); //open file
-    
-//    if(data.is_open()){
-//        data << "UserId, UserName, Password" << endl;
-//        data.close();
-//    }
-    
-    cout << "a. Login\nb. Create an account\nc. Exit" << endl;
-    cout << "-> ";
-    cin >> userInput;
-    
-    switch (userInput) {
-        case 'a':
-            logIn(); //pass csv file
-            break;
-        case 'b':
-            createAccount("userList.csv", data); //pass csv file
-            break;
-        case 'c':
-            cout << "Exit" << endl;
-            break;
-        default:
-            cout << "Invalid Input >:(" << endl;
-            break;
-    }
-}
-
 int main(int argc, const char * argv[]) {
     char userInput = '\0';
     bool isAuthenticated = false;
     CurrentUser currentUser;
     
+    //file
     cout << "Current working directory: " << filesystem::current_path() << endl;
+    fstream data;
+    data.open("userList.csv", ios::out | ios::app); //open file
+    
     cout << "FlashCard" << endl;
-    do {
-        cout << "a. Login\nb. Create an account\nc. Exit" << endl;
+    while (userInput != 'c' ) {
+        cout << "a. Login\nb. Create an account\nc. Exit\nd. Display UserList" << endl;
         cout << "-> ";
         cin >> userInput;
         
         if (userInput == 'a') {
             cout << "Logging in..." << endl;
-            
             /*
              run auth();
                 - pass currentUser struct (and isAuthenticated?) by reference
@@ -142,19 +143,22 @@ int main(int argc, const char * argv[]) {
                 - exit
                 - if (isAuthenticated == true) then exits the while loop
              */
-            cout << "auth will return bool" << endl;
-            cout << "auth() then access to create, review, quiz" << endl;
+            
         } else if( userInput == 'b') {
-            cout << "Creating an account..." << endl;
-            cout << "some function and break" << endl;
+            cout << "Creating account..." << endl;
+            createAccount("userList.csv", data);
         } else if( userInput == 'c') {
             cout << "Exiting..." << endl;
+        } else if (userInput == 'd') { //just to view current users from .csv file
+            userExist("userList.csv", data);
+        } else {
+            cout << "Invalid input" << endl;
         }
-    } while (userInput != 'c' || isAuthenticated);
+    }
     
-    if(!isAuthenticated){
+    if(isAuthenticated){
         cout << "Please select one: " << endl;
-        cout << "a. Create\nb. Review\nc.\ncQuiz";
+        cout << "a. Create\nb. Review\nc.Quiz" << endl;
         cout << "-> ";
         cin >> userInput;
     }
@@ -164,22 +168,6 @@ int main(int argc, const char * argv[]) {
 
 
 //Breaking it down
-/*
- plan a
- main func
-    |_ auth func
-        |_log func that return bool isUserLoggedIn ? authenticated == true : cout << "try again or create account";
-        |_createAcc func - after user create account, they'll be redirected to auth func, where they'll have to log in, creating account != authenticated
- */
-
-/*
- plan b
- first run auth()
-    - users log in, if users dont have account, create accout, then log in
-    - the information of user that logged in is save in a currentUser struct
-    - exit auth funct
- */
-
 /*
  plan c - current ✨
  in main function, program ask user to login, creat account, or exit
