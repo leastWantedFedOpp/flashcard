@@ -8,26 +8,13 @@
 
 using namespace std;
 
-
-//initally created to store id and username to a file.
-//struct File{
-//    User user; //id and username
-//    string fileName;
-//    string privacy; //true or false
-//};
-
-//dont need to store id and username, currentUser info is already passes that includes id and username :)
 struct File{
     string fileName;
     string privacy; //true or false?
 };
 
-
  //pass userFiles.csv
  bool fileExist(string filename, fstream& data, int checkId, string checkUsername, string checkFileName){
-     
-//     vector<string> currUserFiles; //a vector that holds list of users file
-     
      data.open(filename, ios::in);
      if(data.is_open()){
          string line;
@@ -37,9 +24,7 @@ struct File{
              if(line.empty()) continue;
              File viewFile;
              int authorId = stoi(line); //author id
-//             viewFile.user.id = stoi(line); //author id
              getline(data, line, ',');
-//             viewFile.user.username = line; //author name
              string authorName = line; //author name
              getline(data, line, ',');
              viewFile.fileName = line; //filename
@@ -47,24 +32,18 @@ struct File{
              viewFile.privacy = line; //privacy
              
              if(authorId == checkId && authorName == checkUsername) {
-//                 currUserFiles.push_back(viewFile.fileName);
                  if(viewFile.fileName == filename){
                      return true; //yes it does exist
                  } else {
                      return false;
                  }
              }
-        //check file name
-            //make list/vector that hold all the name of file of currentUser
-            //then check if currentUser already has a file w/same name, if so
-            //return true else false :)
          }
          data.close();
      } else {
          cout << "Unable to open file :(" << endl;
      }
      return false;
- 
  }
 
 void Create(User& currentUser){
@@ -73,26 +52,23 @@ void Create(User& currentUser){
     fstream data;
     
     cout << "Create." << endl;
-    //    author.id = currentUser.id;
-    //    author.username = currentUser.username;
     cout << "Name of file: ";
-    cin >> fileName; //check if a filename alerady exist user under the current user
-    //    fileExist("userFiles.csv", data, author.id, author.username, fileName);
-    if(fileExist("userFiles.csv", data, currentUser.id, currentUser.username, fileName)){
-        cout << "you're gud. continue 😘" << endl;
-    } else {
-        cout << "file already exist, try again 🙃" << endl;
-    }
+    cin >> fileName;
+    //check if a filename alerady exist user under the current user
+    
+//    if(fileExist("userFiles.csv", data, currentUser.id, currentUser.username, fileName)){
+//        cout << "you're gud. continue 😘" << endl;
+//    } else {
+//        cout << "file already exist, try again 🙃" << endl;
+//    }
     
     cout << "Privacy setting (public/private): ";
     cin >> privacy;
     
-    
-     //add file information into userList .csv
-     data.open("userFiles.csv", ios::out | ios::app);
+    data.open("userFiles.csv", ios::out | ios::app);
      
      if(data.is_open()){
-         data << to_string(currentUser.id) + "," + currentUser.username + "," + fileName + "," + privacy + "\n";
+         data << to_string(currentUser.id) + "," + currentUser.username + "," + (fileName + ".txt")+ "," + privacy + "\n";
          cout << "File successfully added :)" << endl;
      data.close();
      } else {
@@ -152,15 +128,14 @@ int main(int argc, const char * argv[]) {
     cout << "Current working directory: " << filesystem::current_path() << endl;
     fstream data;
 
+//  to reset
 //    data.open("userFiles.csv", ios::out);
 //    if(data.is_open()){
 //        data << "Author Id, Author Name, Note, Privacy Setting\n";;
 //        data.close();
 //        cout << "Successfully Created :)" << endl;
 //    }
-    
-    cout << "hello create function" << endl;
-    
+        
     while (running) {
         cout << "FlashCard" << endl;
         while (userInput != 'c') {
