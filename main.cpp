@@ -199,3 +199,47 @@ int main(int argc, const char * argv[]) {
         - display file name but filter based on user
  
  */
+
+ //alternative to writing question and answer into txt file
+ //explanation:
+ /*
+  might have to remove '\n\' after data << question << '\n' (same from answer)
+  the plan now:
+  first wrap question with '[?' and '?]'
+  qStartingPoint and qEndingPoint
+  
+  wrap answer with '{-' and '-}'
+  aStartingPoint and aEndingPoint
+  
+  card 1;
+  initial starting point will be from 0
+  end at the answer ending point aEndingPoint;
+  
+  card2:
+  starting point will be from prev answer ending point (aEndingPoint + 1) //using substr till the end of the text file
+  
+  end of the text file means i have to count char of text
+  
+  use substring to extract the info btwn each
+  store question and answer inside a struct inside vector
+  
+  
+  read the entire fil
+ */
+
+/*
+ 
+ string question = "[?Is this a questions??]"; //len = 24
+ string answer = "{-Thi is the answer, i think.-}";
+ int startPoint = unsigned( question.find("[?") ) + 2;
+ int endPoint = unsigned( question.find("?]") - 2 );
+ cout << question.find("[?") << endl;
+ cout << question.find("?]") << endl;
+
+ cout << "Starting point (index) : " << startPoint << endl;
+ cout << "End point (index) : " << endPoint << endl;
+ 
+ cout << question << endl;
+ cout << question.substr(startPoint, endPoint) << endl;
+ 
+ */
