@@ -8,13 +8,50 @@
 using namespace std;
 
 //struct File{
-//    CurrentUser currentUser; //id and username
+//    User currentUser; //id and username
 //    string fileName;
 //    string privacy; //true or false
 //};
 
 
-void Create(){
+void Create(User& currentUser){
+    User author;
+    string fileName, privacy;
+    cout << "Create." << endl;
+    author.id = currentUser.id;
+    author.username = currentUser.username;
+    cout << "Name of file: ";
+    cin >> fileName; //check if a filename alerady exist user under the current user
+    cout << "Privacy setting (public/private): ";
+    cin >> privacy;
+    
+    /*
+     //add file information into userList .csv
+     
+     fstream data;
+     data.open("userFiles.csv", ios::out | ios::app);
+     
+     if(data.is_open()){
+        data << authorId + "," + authorname + "," + filename + "," + privacy + "\n";
+        data.close();
+     }
+     */
+    
+    /*
+     fstream data;
+     data.open(fileName + ".txt", ios::out | ios::app);
+     
+     if(data.is_open()){
+        //while loop
+            cout << "Question" << endl;
+            data << question << "\n";
+            cout << "Answer" << endl;
+            data << answer << "\n";
+        if user types ceratin character, break loop
+        cout << "Successfully created" << endl;
+        data.close();
+     }
+     */
     
 }
 
@@ -79,6 +116,7 @@ int main(int argc, const char * argv[]) {
                     cin >> userInput;
                     if (userInput == 'a') {
                         cout << "Create." << endl;
+                        Create(currentUser);
                     } else if(userInput == 'b'){
                         cout << "Review." << endl;
                     } else if (userInput == 'c'){
