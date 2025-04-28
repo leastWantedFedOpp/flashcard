@@ -47,14 +47,14 @@ struct File{
  }
 
 void Create(User& currentUser){
-//    User author;
-    string fileName, privacy;
+    string fileName; //for struct
+    string privacy;
+    string question, answer; //for QnA to append inside a text file
     fstream data;
     
     cout << "Create." << endl;
     cout << "Name of file: ";
     cin >> fileName;
-    //check if a filename alerady exist user under the current user
     
 //    if(fileExist("userFiles.csv", data, currentUser.id, currentUser.username, fileName)){
 //        cout << "you're gud. continue 😘" << endl;
@@ -62,61 +62,55 @@ void Create(User& currentUser){
 //        cout << "file already exist, try again 🙃" << endl;
 //    }
     
-    cout << "Privacy setting (public/private): ";
-    cin >> privacy;
+    cout << "Privacy setting:\na. public\nb. private " << endl;
+//    while (privacy != 'a' || privacy != 'b') {
+        cout <<  "-> ";
+        cin >> privacy;
+//    };
+//    if(privacy == 'a'){
+//        privacy = "public";
+//    } else {
+//        
+//    }
     
+    //append file name
     data.open("userFiles.csv", ios::out | ios::app);
      
      if(data.is_open()){
-         data << to_string(currentUser.id) + "," + currentUser.username + "," + (fileName + ".txt")+ "," + privacy + "\n";
+         data << to_string(currentUser.id) + "," + currentUser.username + "," + (fileName + ".txt")+ "," + (privacy == "a" ? privacy = "public" : privacy = "private") + "\n";
          cout << "File successfully added :)" << endl;
      data.close();
      } else {
          cout << "Trouble opening file :(" << endl;
      }
     
-    /*
-     fstream data;
-     data.open(fileName + ".txt", ios::out | ios::app);
-     
-     if(data.is_open()){
-     //while loop
-     cout << "Question" << endl;
-     data << question << "\n";
-     cout << "Answer" << endl;
-     data << answer << "\n";
-     if user types ceratin character, break loop
-     cout << "Successfully created" << endl;
+    //store inside its own function 🥹?
+    //create file
+     data.open((fileName + ".txt"), ios::out | ios::app);
+    if(data.is_open()){
+        char userInput = '\0';
+        while (userInput != 'e'){
+            cin.ignore();
+            int count = 1;
+            cout << "Question " + to_string(count)  + ": ";
+            getline(cin, question);
+            data << question << "\n";
+            cout << "Answer: " + to_string(count)  + ": ";
+            getline(cin, answer);
+            data << answer << "\n";
+            cout << "Type 'c' to continue or 'e' to exit" << endl;
+            cout << "-> ";
+            cin >> userInput;
+            if(userInput == 'e') {
+                cout << "Total cards created: " << (count == 1 ? count = 1: count - 1) << endl;
+            }
+            count++;
+    }
+    
+        cout << (fileName + ".txt") << " successfully created" << endl;
      data.close();
      }
-     
-     
-     }
-     */
-     /*
-     first create existing file called userFiles.csv
-     
-     struct File{
-     int id; //from currentUser
-     string author; //from currentUser
-     string name;
-     string privacy; //private or public
-     }
-     
-     create() - workflow
-     |_currentUser
-     data << "userId (AuthorId), username(Author), FileName, Pivacy Setting << endl;
-     //set info for file
-     |_create a txt file based on file name user inputted
-     |_write on file
-     |_question: *user types question* + '\n' // set char limit?
-     |_answer: *user types answer* + '\n' // set char limit?
-     |_data << qustion << '\n' << answer;
-     |_if user types 'x' << cancel;
-     
-     
-     
-     */
+    
 }
 
 int main(int argc, const char * argv[]) {
@@ -155,7 +149,6 @@ int main(int argc, const char * argv[]) {
                     cout << "-> ";
                     cin >> userInput;
                     if (userInput == 'a') {
-                        cout << "Create." << endl;
                         Create(currentUser);
                     } else if(userInput == 'b'){
                         cout << "Review." << endl;
@@ -183,3 +176,26 @@ int main(int argc, const char * argv[]) {
     cout << "youhoo 👋" << endl;
     return 0;
 }
+
+/*
+ manage file/folder
+ |_data
+    |_.csv
+    |_.txt
+ |_utils
+ |_main.cpp and others
+ */
+
+/*
+ work on:
+    - validate fileName? (if there are spaces - ask user to type again etc.)
+ 
+    - fixing fileExist()
+    - privacy setting (userinput == "public" || "private")
+    - while loop for q n a
+ 
+    Review branch
+    - display file name, use similar function to fileExist()
+        - display file name but filter based on user
+ 
+ */
