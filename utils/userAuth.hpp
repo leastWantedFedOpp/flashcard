@@ -1,13 +1,31 @@
-//
-//  userAuth.hpp
-//  FlashCard
-//
-//  Created by Chhiring D. Lama on 4/27/25.
-//
+#include <iostream>
 
 #ifndef userAuth_hpp
 #define userAuth_hpp
 
-#include <stdio.h>
+using namespace std;
+
+struct UserTemplate{
+    int id;
+    string username;
+};
+
+struct User{
+    UserTemplate user;
+    string password;
+};
+
+struct CurrentUser{
+    UserTemplate currentUser;
+};
+
+void displayUsers(string, fstream&);
+
+bool userExist(string , fstream& , string , string , CurrentUser& , bool );
+
+void logIn(string , fstream& , CurrentUser& , bool& );
+
+void createAccount(string , fstream& , CurrentUser& );
+
 
 #endif /* userAuth_hpp */
