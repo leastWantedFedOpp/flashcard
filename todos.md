@@ -1,8 +1,8 @@
-#  Todos
+# Todos
 
-## Process so far 😵‍💫...
+## the workflow? 😵‍💫...
 
-1. welcome 👋 login or create an account
+1. welcome 👋 login or create an account <mark>✅ works enough 💀</mark>
     - open file with user list stored
     1. login
         - username, password
@@ -18,13 +18,13 @@
             try again or go back
           else(store username and password in file, authenticated ✅)
 2. display options:
-    1. create 📝
+    1. create 📝 <mark>✅ works enough 💀</mark>
         - fileName, privacy setting(public/private)
         - author/username, authorid/userId will automatically be assigned based on who's logged in
         - open a <cardName>.txt file
         - write
         - close
-    2. review 📖
+    2. review 📖 <mark>🌀 in progress</mark>
         - myNotes
             - display all file under user database
             - user will select notes based on name
