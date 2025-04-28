@@ -13,6 +13,11 @@ struct File{
     string privacy; //true or false?
 };
 
+struct Card{
+    string question;
+    string answer;
+};
+
  //pass userFiles.csv
  bool fileExist(string filename, fstream& data, int checkId, string checkUsername, string checkFileName){
      data.open(filename, ios::in);
@@ -67,11 +72,6 @@ void Create(User& currentUser){
         cout <<  "-> ";
         cin >> privacy;
 //    };
-//    if(privacy == 'a'){
-//        privacy = "public";
-//    } else {
-//        
-//    }
     
     //append file name
     data.open("userFiles.csv", ios::out | ios::app);
@@ -92,12 +92,18 @@ void Create(User& currentUser){
         while (userInput != 'e'){
             cin.ignore();
             int count = 1;
+//            cout << "Question " + to_string(count)  + ": ";
+//            getline(cin, question);
+//            data << question << "\n";
+//            cout << "Answer: " + to_string(count)  + ": ";
+//            getline(cin, answer);
+//            data << answer << "\n";
             cout << "Question " + to_string(count)  + ": ";
             getline(cin, question);
-            data << question << "\n";
+            data <<  "{?" << question << "?}";
             cout << "Answer: " + to_string(count)  + ": ";
             getline(cin, answer);
-            data << answer << "\n";
+            data << "[-" << answer << "-]";
             cout << "Type 'c' to continue or 'e' to exit" << endl;
             cout << "-> ";
             cin >> userInput;
@@ -110,7 +116,23 @@ void Create(User& currentUser){
         cout << (fileName + ".txt") << " successfully created" << endl;
      data.close();
      }
+}
+
+void review(){
+    string reviewFileName;
+    cout << "Name the file you would like to review: ";
+    cout << "-> ";
+    cin >> reviewFileName;
     
+    fstream data;
+    data.open(reviewFileName, ios::in);
+    if(data.is_open()){
+        /*
+         read file, get len of file, start disecting, input info inside the struct, then vector, repeat till the end of file.
+         */
+    } else {
+        cout << "Trouble opening file :(" << endl;
+    }
 }
 
 int main(int argc, const char * argv[]) {
