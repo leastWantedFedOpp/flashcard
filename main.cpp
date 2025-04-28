@@ -24,7 +24,7 @@ void Create(User& currentUser){
     cin >> fileName; //check if a filename alerady exist user under the current user
     cout << "Privacy setting (public/private): ";
     cin >> privacy;
-    
+        
     /*
      //add file information into userList .csv
      
@@ -83,7 +83,7 @@ void Create(User& currentUser){
 int main(int argc, const char * argv[]) {
     char userInput = '\0';
     bool isAuthenticated = false;
-    bool running = true;
+    bool running = false;
     User currentUser = {0,""}; //id set to 0, username set to empty string
     
     cout << "Current working directory: " << filesystem::current_path() << endl;
@@ -95,6 +95,8 @@ int main(int argc, const char * argv[]) {
 //        data.close();
 //        cout << "Successfully Created :)" << endl;
 //    }
+    
+    cout << "hello create function" << endl;
     
     while (running) {
         cout << "FlashCard" << endl;
