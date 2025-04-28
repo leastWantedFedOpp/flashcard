@@ -5,27 +5,22 @@
 
 using namespace std;
 
-struct UserTemplate{
+struct User{
     int id;
     string username;
 };
 
-struct User{
-    UserTemplate user;
+struct UserAuth{
+    User user;
     string password;
-};
-
-struct CurrentUser{
-    UserTemplate currentUser;
 };
 
 void displayUsers(string, fstream&);
 
-bool userExist(string , fstream& , string , string , CurrentUser& , bool );
+bool userExist(string , fstream& , string , string , User& , bool );
 
-void logIn(string , fstream& , CurrentUser& , bool& );
+void logIn(string , fstream& , User& , bool& );
 
-void createAccount(string , fstream& , CurrentUser& );
-
+void createAccount(string , fstream& , User& );
 
 #endif /* userAuth_hpp */

@@ -7,14 +7,57 @@
 
 using namespace std;
 
+//struct File{
+//    CurrentUser currentUser; //id and username
+//    string fileName;
+//    string privacy; //true or false
+//};
+
+
+void Create(){
+    
+}
+
+/*
+ first create existing file called userFiles.csv
+ 
+ struct File{
+    int id; //from currentUser
+    string author; //from currentUser
+    string name;
+    string privacy; //private or public
+ }
+ 
+ create()
+    |_currentUser
+    data << "userId (AuthorId), username(Author), FileName, Pivacy Setting << endl;
+    //set info for file
+    |_create a txt file based on file name user inputted
+    |_write on file
+        |_question: *user types question* + '\n' // set char limit?
+        |_answer: *user types answer* + '\n' // set char limit?
+        |_data << qustion << '\n' << answer;
+        |_if user types 'x' << cancel;
+        
+ 
+    
+ */
+
 int main(int argc, const char * argv[]) {
     char userInput = '\0';
     bool isAuthenticated = false;
     bool running = true;
-    CurrentUser currentUser = {{0,""}}; //id set to 0, username set to empty string
+    User currentUser = {0,""}; //id set to 0, username set to empty string
     
     cout << "Current working directory: " << filesystem::current_path() << endl;
     fstream data;
+
+//    data.open("userFiles.csv", ios::out);
+//    if(data.is_open()){
+//        data << "Author Id, Author Name, Note, Privacy Setting\n";;
+//        data.close();
+//        cout << "Successfully Created :)" << endl;
+//    }
     
     while (running) {
         cout << "FlashCard" << endl;
@@ -27,7 +70,7 @@ int main(int argc, const char * argv[]) {
                 cout << "Logging in..." << endl;
                 logIn("userList.csv", data, currentUser, isAuthenticated);
                 cout << isAuthenticated << endl;
-                cout << currentUser.currentUser.username << endl;
+                cout << currentUser.username << endl;
                 //login works-ish
                 if(isAuthenticated){
                     cout << "Please select one: " << endl;

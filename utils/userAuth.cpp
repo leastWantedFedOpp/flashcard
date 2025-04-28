@@ -18,7 +18,7 @@ void displayUsers(string filename, fstream& data){
         cout << line <<  "\n";
         while(getline(data, line, ',')){
             if(line.empty()) continue;
-            User user;
+            UserAuth user;
             user.user.id = stoi(line);
             getline(data, line, ',');
             user.user.username = line;
@@ -32,7 +32,7 @@ void displayUsers(string filename, fstream& data){
     }
 }
 
-bool userExist(string filename, fstream& data, string nameInput, string passwordInput, CurrentUser& currentUser, bool login){
+bool userExist(string filename, fstream& data, string nameInput, string passwordInput, User& currentUser, bool login){
     data.open(filename, ios::in);
     if(data.is_open()){
         string line;
@@ -40,7 +40,7 @@ bool userExist(string filename, fstream& data, string nameInput, string password
 //        cout << line <<  "\n";
         while(getline(data, line, ',')){
             if(line.empty()) continue;
-            User user;
+            UserAuth user;
             user.user.id = stoi(line);
             getline(data, line, ',');
             user.user.username = line;
@@ -51,8 +51,8 @@ bool userExist(string filename, fstream& data, string nameInput, string password
             if(user.user.username == nameInput){ //user exist
                 if(login){ //if users is trying to log in
                     if(user.password == passwordInput){ //compare if password matches with username
-                        currentUser.currentUser.id = user.user.id;
-                        currentUser.currentUser.username = user.user.username;
+                        currentUser.id = user.user.id;
+                        currentUser.username = user.user.username;
                         return true;
                     } else {
                         return false;
@@ -68,7 +68,7 @@ bool userExist(string filename, fstream& data, string nameInput, string password
     return false;
 }
 
-void logIn(string filename, fstream& data, CurrentUser& currentUser, bool& isAuthenticated){
+void logIn(string filename, fstream& data, User& currentUser, bool& isAuthenticated){
     string username, password;
     cout << "Log in" << endl;
     cout << "Username: ";
@@ -83,12 +83,7 @@ void logIn(string filename, fstream& data, CurrentUser& currentUser, bool& isAut
     }
 }
 
-/*
- createAccount, things to work on -
-    |_the first time i input a name that aready exist, it'll say "user aready exist"
-        but the next time it'll allow it.
- */
-void createAccount(string filename, fstream& data, CurrentUser& currentUser){
+void createAccount(string filename, fstream& data, User& currentUser){
     int id;
     string username, password;
             
@@ -102,7 +97,7 @@ void createAccount(string filename, fstream& data, CurrentUser& currentUser){
 
         cout << "Password: ";
         cin >> password; //create password
-        User newUser = {{id, username}, password}; //new user is created
+        UserAuth newUser = {{id, username}, password}; //new user is created
         if(data.is_open()){ //open data
             data << to_string(newUser.user.id) + "," + newUser.user.username + "," + newUser.password + "\n";//add new user info inside userList.csv
             cout << "User successfully created" << endl;
@@ -114,4 +109,3 @@ void createAccount(string filename, fstream& data, CurrentUser& currentUser){
         cout << "User already exist :(" << endl;
     }
 }
-
