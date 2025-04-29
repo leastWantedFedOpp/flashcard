@@ -68,10 +68,10 @@ void Create(User& currentUser){
 //    }
     
     cout << "Privacy setting:\na. public\nb. private " << endl;
-//    while (privacy != 'a' || privacy != 'b') {
+    do {
         cout <<  "-> ";
         cin >> privacy;
-//    };
+    } while (privacy != "a" || privacy != "b");
     
     //append file name
     data.open("userFiles.csv", ios::out | ios::app);
@@ -92,24 +92,18 @@ void Create(User& currentUser){
         while (userInput != 'e'){
             cin.ignore();
             int count = 1;
-//            cout << "Question " + to_string(count)  + ": ";
-//            getline(cin, question);
-//            data << question << "\n";
-//            cout << "Answer: " + to_string(count)  + ": ";
-//            getline(cin, answer);
-//            data << answer << "\n";
             cout << "Question " + to_string(count)  + ": ";
             getline(cin, question);
-            data <<  "{?" << question << "?}";
+            data << question << "\n";
             cout << "Answer: " + to_string(count)  + ": ";
             getline(cin, answer);
-            data << "[-" << answer << "-]";
+            data << answer << "\n"; //remove "\n"*
             cout << "Type 'c' to continue or 'e' to exit" << endl;
             cout << "-> ";
             cin >> userInput;
             if(userInput == 'e') {
                 cout << "Total cards created: " << (count == 1 ? count = 1: count - 1) << endl;
-            }
+            } //else add a new line here*
             count++;
     }
     
@@ -119,19 +113,83 @@ void Create(User& currentUser){
 }
 
 void review(){
-    string reviewFileName;
+    string reviewFileName = "MikeyQNA.txt";
+    vector<Card> mySet;
+    Card myCard;
+    
+    /*
+     read file, get len of file, start disecting, input info inside the struct, then vector, repeat till the end of file.
+     */
+    
+    /*
     cout << "Name the file you would like to review: ";
     cout << "-> ";
     cin >> reviewFileName;
+    */
+     
+    cout << "File name " << reviewFileName << endl;
     
     fstream data;
     data.open(reviewFileName, ios::in);
     if(data.is_open()){
-        /*
-         read file, get len of file, start disecting, input info inside the struct, then vector, repeat till the end of file.
-         */
+        string line;
+        int lineNo = 1;
+        while(!data.eof()){
+            getline(data, line);
+            cout << "this is line " << lineNo << ": " << line << endl;
+            if(lineNo % 2 != 0){ //odd 1, 3, 5, 7,...
+                myCard.question = line;
+            } else { //even 2,4,6,8,...
+                myCard.answer = line;
+            }
+            mySet.push_back(myCard);
+            lineNo++;
+            /*
+             current output
+             Question: is mikey awesome?
+             Answer:
+             * Question: is mikey awesome? //ideal output
+             Answer: heck yeah!!!
+             Question: Does mikey like pizza?
+             Answer: heck yeah!!!
+             * Question: Does mikey like pizza? //ideal output
+             Answer: He loves it!!!
+             Question: Is mikey the best brother?
+             Answer: He loves it!!!
+             * Question: Is mikey the best brother? //ideal output
+             Answer: You know it, rahhhhh!!!
+             Question:
+             Answer: You know it, rahhhhh!!!
+             
+             what it does rn:
+             
+                - getline reads the first line
+                - checks with if statement
+                    - first line is odd, so its stored as question in myCard (struct)
+                    - exists loop then myCard, now has question but answer is empty, is added to mySet (vector)
+                - lineNo++; //now 2
+             
+                not end of file so we run it again but now lineNo = 2;
+             
+                 - getline reads the second line
+                 - checks with if statement
+                     - second line is even, so its stored as answer in myCard (struct)
+                     - exists loop then myCard, now has question and answer, is added to mySet (vector)
+                 - lineNo++; //now 3
+                
+                repeats
+             
+             
+             */
+            
+        }
     } else {
         cout << "Trouble opening file :(" << endl;
+    }
+    
+    for(auto card:mySet){
+        cout << "Question: " << card.question << endl;
+        cout << "Answer: " << card.answer << endl;
     }
 }
 
@@ -171,9 +229,10 @@ int main(int argc, const char * argv[]) {
                     cout << "-> ";
                     cin >> userInput;
                     if (userInput == 'a') {
-                        Create(currentUser);
+//                        Create(currentUser);
                     } else if(userInput == 'b'){
                         cout << "Review." << endl;
+                        review();
                     } else if (userInput == 'c'){
                         cout << "Quiz." << endl;
                     } else if (userInput == 'd'){
@@ -219,6 +278,23 @@ int main(int argc, const char * argv[]) {
     Review branch
     - display file name, use similar function to fileExist()
         - display file name but filter based on user
+ 
+ */
+
+// initial plan for reading and writing txt files, extracting q n a and storing it to struct
+/*
+ the odd line numbers would hold questions, even would hold answeres
+ keep on going while(!eof){}
+ 
+ ex. example.txt
+ 
+ what day is today? //1 question
+ today is monday //2 answer
+ what dat is tomorrow? //3 question
+ tomorrow is tuesday //4 answer
+ 
+ 
+ getline(file, line);
  
  */
 
