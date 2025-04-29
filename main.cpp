@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <map>
+#include <utility>
 
 #include "utils/userAuth.hpp"
 
@@ -97,13 +99,15 @@ void Create(User& currentUser){
             data << question << "\n";
             cout << "Answer: " + to_string(count)  + ": ";
             getline(cin, answer);
-            data << answer << "\n"; //remove "\n"*
+            data << answer; //removed "\n" incase user decide to exit :(
             cout << "Type 'c' to continue or 'e' to exit" << endl;
             cout << "-> ";
             cin >> userInput;
             if(userInput == 'e') {
                 cout << "Total cards created: " << (count == 1 ? count = 1: count - 1) << endl;
-            } //else add a new line here*
+            } else { //if user doest exit, create a new line for user too add info on ;)
+                data << "\n";
+            }
             count++;
     }
     
@@ -114,8 +118,9 @@ void Create(User& currentUser){
 
 void review(){
     string reviewFileName = "MikeyQNA.txt";
-    vector<Card> mySet; //list of cards
-    Card myCard; //one individual card
+    vector<map<int,Card>> mySet; //list of map
+    map<int,Card> cardMap; //map with int, and card struct
+    Card myCard; //card struct w/question n answer
     
     cout << "File name " << reviewFileName << endl;
     
@@ -131,19 +136,8 @@ void review(){
             myCard.question = line;
             myCard.answer = line2;
             
-            mySet.push_back(myCard);
-    
-            /*
-             problem fixed 🫥?
-             
-             //notes for later addons to update/change notes
-             use maps?
-             map<int, Card> myCard;
-             with int as key, user can select the value (card) and change the content inside
-             so, vector will hold map that hold int and struct
-             
-             vector<map<int, Card>> mySet;
-             */
+            cardMap.insert(make_pair(lineNo, Card{myCard.question, myCard.answer})); //create a map with pair of int and Card struct that holds question and answer
+            mySet.push_back(cardMap); //add the card inse the vector
             
             lineNo++;
         }
@@ -151,10 +145,29 @@ void review(){
         cout << "Trouble opening file :(" << endl;
     }
     
-    for (const auto& card:mySet) {
-        cout << "Question: " << card.question << endl;
-        cout << "Answer: " << card.answer << endl;
+    for (const auto& cardmap:mySet) { //for loop for a vector that holds map
+        for (const auto& card:cardmap) { //for loop for map that holds key(int) and value(question, answer)
+            cout << card.first << ". " << "Question: " << card.second.question << endl;
+            cout << "Answer: " << card.second.answer << endl;
+        }
     }
+    
+    /*
+     currently prints in following order :(
+     qna1
+     -
+     qna1
+     qna2
+     -
+     qna1
+     qna2
+     qna3
+     -
+     qna1
+     qna2
+     qna3
+     qna4
+     */
 }
 
 int main(int argc, const char * argv[]) {
@@ -187,7 +200,7 @@ int main(int argc, const char * argv[]) {
                 cout << isAuthenticated << endl;
                 cout << currentUser.username << endl;
                 //login works-ish
-                if(isAuthenticated){
+                if(isAuthenticated){ //use a while loop dumbass
                     cout << "Please select one: " << endl;
                     cout << "a. Create\nb. Review\nc. Quiz\nd. Logout" << endl;
                     cout << "-> ";
