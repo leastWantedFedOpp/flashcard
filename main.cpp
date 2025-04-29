@@ -114,80 +114,44 @@ void Create(User& currentUser){
 
 void review(){
     string reviewFileName = "MikeyQNA.txt";
-    vector<Card> mySet;
-    Card myCard;
+    vector<Card> mySet; //list of cards
+    Card myCard; //one individual card
     
-    /*
-     read file, get len of file, start disecting, input info inside the struct, then vector, repeat till the end of file.
-     */
-    
-    /*
-    cout << "Name the file you would like to review: ";
-    cout << "-> ";
-    cin >> reviewFileName;
-    */
-     
     cout << "File name " << reviewFileName << endl;
     
     fstream data;
     data.open(reviewFileName, ios::in);
     if(data.is_open()){
         string line;
+        string line2;
         int lineNo = 1;
         while(!data.eof()){
             getline(data, line);
-            cout << "this is line " << lineNo << ": " << line << endl;
-            if(lineNo % 2 != 0){ //odd 1, 3, 5, 7,...
-                myCard.question = line;
-            } else { //even 2,4,6,8,...
-                myCard.answer = line;
-            }
+            getline(data, line2);
+            myCard.question = line;
+            myCard.answer = line2;
+            
             mySet.push_back(myCard);
-            lineNo++;
+    
             /*
-             current output
-             Question: is mikey awesome?
-             Answer:
-             * Question: is mikey awesome? //ideal output
-             Answer: heck yeah!!!
-             Question: Does mikey like pizza?
-             Answer: heck yeah!!!
-             * Question: Does mikey like pizza? //ideal output
-             Answer: He loves it!!!
-             Question: Is mikey the best brother?
-             Answer: He loves it!!!
-             * Question: Is mikey the best brother? //ideal output
-             Answer: You know it, rahhhhh!!!
-             Question:
-             Answer: You know it, rahhhhh!!!
+             problem fixed 🫥?
              
-             what it does rn:
+             //notes for later addons to update/change notes
+             use maps?
+             map<int, Card> myCard;
+             with int as key, user can select the value (card) and change the content inside
+             so, vector will hold map that hold int and struct
              
-                - getline reads the first line
-                - checks with if statement
-                    - first line is odd, so its stored as question in myCard (struct)
-                    - exists loop then myCard, now has question but answer is empty, is added to mySet (vector)
-                - lineNo++; //now 2
-             
-                not end of file so we run it again but now lineNo = 2;
-             
-                 - getline reads the second line
-                 - checks with if statement
-                     - second line is even, so its stored as answer in myCard (struct)
-                     - exists loop then myCard, now has question and answer, is added to mySet (vector)
-                 - lineNo++; //now 3
-                
-                repeats
-             
-             
+             vector<map<int, Card>> mySet;
              */
             
+            lineNo++;
         }
     } else {
         cout << "Trouble opening file :(" << endl;
     }
     
-    for(auto card:mySet){
+    for (const auto& card:mySet) {
         cout << "Question: " << card.question << endl;
         cout << "Answer: " << card.answer << endl;
     }
