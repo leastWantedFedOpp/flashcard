@@ -77,13 +77,23 @@ void quiz(){
 
 //does not work, file opens but does not read
 //first just have it display fileName and their author ;)
-void displayFileList(string filename, fstream& data){ //"userFiles.csv"
-    data.open(filename, ios::in);
+void displayFileList(string filename, User& currentUser){ //"userFiles.csv" , currentUser, userInput
+    fstream data(filename, ios::in);
+    char userInput = '\0';
+    cout << "View:\na. My notes\nb. All notes" << endl; //when user select all nots first display their notes then All notes. if usere select my notes only display thri notes;
+    do {
+        cout << "-> ";
+        cin >> userInput;
+        
+        if(userInput != 'a' && userInput != 'b'){
+            cout << "Invalid input! Type 'a' to view your notes or 'b' to view all notes" << endl;
+        }
+        
+    } while (userInput != 'a' && userInput != 'b');
+    
     if(data.is_open()){
         string line;
         getline(data, line);
-        //goes up to here but does not run while loop?
-        cout << "I am here and I have access to " << filename << " file" << endl;
         while(getline(data, line, ',')){
             if(line.empty()) continue;
 
@@ -97,9 +107,52 @@ void displayFileList(string filename, fstream& data){ //"userFiles.csv"
             displayFile.fileName = line; //filename
             getline(data, line);
             displayFile.privacy = line; //privacy
+           
+             //users will be authenticated
+            switch (userInput) {
+                case 'a':
+                    //display user files
+                    if(user.id == currentUser.id){ //if id of this file == currentUser id
+                        cout << displayFile.fileName << " - " << displayFile.privacy << " - " << user.username << endl;
+                    }
+                    break;
+                case 'b':
+                    //display user + public files
+                    cout << displayFile.fileName << " - " << displayFile.privacy << " - " << user.username << endl;
+                    break;
+                default:
+                    break;
+            }
             
-            cout << displayFile.fileName << " - " << user.username << endl;
-
+            /*
+             prefered result:
+             for 'a':
+                 My Notes
+                    - display myNote1
+                    - display myNote3
+                    - display myNote3
+             
+             for 'b':
+                 My Notes
+                    - display myNote1
+                    - display myNote3
+                    - display myNote3
+             
+                 All Notes
+                    - display publicNote1
+                    - display publicNote2
+                    - display publicNote3
+             ===
+             
+             //first display logged in user note, then display rest of the notes
+             //do i store all notes in vector and filter later?
+             //or
+             //create 2 vecotor?
+                - i can create 2 vector called myNotes and allNote
+                - myNote vector, if(user.id == currentUser.id) - push file in myNote vector
+                - allNote vector, push rest of the files
+             */
+            
         }
         data.close();
     } else {
@@ -150,7 +203,7 @@ int main(int argc, const char * argv[]) {
                         cout << "Quiz." << endl;
                     } else if (userInput == 'd'){
 //                        cout << "Display file list." << endl;
-                        displayFileList("userFiles.csv", data);
+                        displayFileList("userFiles.csv", currentUser);
                     } else if (userInput == 'e'){
                         cout << "Logout." << endl;
                         isAuthenticated = false;
@@ -165,7 +218,7 @@ int main(int argc, const char * argv[]) {
             } else if (userInput == 'd') { //just to view current users from .csv file
                 displayUsers("userList.csv", data);
             } else if (userInput == 'e') {
-                displayFileList("userFiles.csv", data);
+                displayFileList("userFiles.csv", currentUser);
             } else {
                 cout << "Invalid input" << endl;
             }
@@ -196,4 +249,7 @@ int main(int argc, const char * argv[]) {
     Review branch
     - display file name, use similar function to fileExist()
         - display file name but filter based on user
+ 
+    for all function
+        - remove data from paramater and just call fstream again to avoid issues
  */
