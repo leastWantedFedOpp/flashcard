@@ -186,7 +186,7 @@ int main(int argc, const char * argv[]) {
 //        data.close();
 //        cout << "Successfully Created :)" << endl;
 //    }
-        
+    cout << "Hello reviw-n-quiz branch" << endl;
     while (running) {
         cout << "FlashCard" << endl;
         while (userInput != 'c') {
