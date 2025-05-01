@@ -10,7 +10,7 @@ struct File{
     string privacy;
 };
 
-bool fileExist(string, int , string);
+bool fileExist(string , string, bool, int);
 
 void Create(User&);
 

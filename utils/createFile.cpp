@@ -5,7 +5,7 @@
 
 //this currenly check when user tries to create a file, see if file already exist under same user
 //have this also just check if file exist
-bool fileExist(string filename, int checkId, string checkFileName){
+bool fileExist(string filename, string checkFileName, bool forCreate  ,int checkId ){
     fstream data(filename, ios::in);
     if(data.is_open()){
         string line;
@@ -25,10 +25,18 @@ bool fileExist(string filename, int checkId, string checkFileName){
             //the purpose of this is to check if the currentUser already has a file named x to avoid duplication
             
             //check is user exist and if the fileName currently readin matches with checkFileName is same line :P
-            if(authorId == checkId && viewFile.fileName == (checkFileName + ".txt")){
-                data.close();
-                return true;
+            if(forCreate){
+                if(authorId == checkId && viewFile.fileName == (checkFileName + ".txt")){
+                    data.close();
+                    return true;
+                }
+            } else {
+                if(viewFile.fileName == (checkFileName + ".txt")){
+                    data.close();
+                    return true;
+                }
             }
+        
         }
     } else {
         cout << "Unable to open file :(" << endl;
@@ -50,7 +58,7 @@ void Create(User& currentUser){
     do {
         cout << "Name of file: ";
         cin >> fileName;
-        thisFileExist = fileExist("userFiles.csv", currentUser.id, fileName);
+        thisFileExist = fileExist("userFiles.csv",  fileName, true, currentUser.id);
         
         if(thisFileExist){ //true
             cout << fileName << " already exist. Try again!" << endl;

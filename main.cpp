@@ -14,24 +14,11 @@ struct Card{
     string answer;
 };
 
-/*
- review
- |_ask my file or all file
-    |_displayFileList based on input
-        |_review
- 
- quiz
- |_ask my file or all file
-    |_displayFileList based on input
-        |_quiz
- */
 
-//does not work, file opens but does not read
-//first just have it display fileName and their author ;)
-void displayFileList(string filename, User& currentUser){ //"userFiles.csv" , currentUser, userInput
+void displayFileList(string filename, User& currentUser){
     fstream data(filename, ios::in);
     char userInput = '\0';
-    cout << "a. My notes\nb. All notes" << endl; //when user select all nots first display their notes then All notes. if usere select my notes only display thri notes;
+    cout << "a. My notes\nb. All notes" << endl;
     do {
         cout << "-> ";
         cin >> userInput;
@@ -58,7 +45,6 @@ void displayFileList(string filename, User& currentUser){ //"userFiles.csv" , cu
             displayFile.fileName = line; //filename
             getline(data, line);
             displayFile.privacy = line; //privacy
-             //users will be authenticated
             
             if(user.id == currentUser.id){
                 myFiles.push_back(displayFile.fileName);
@@ -67,29 +53,41 @@ void displayFileList(string filename, User& currentUser){ //"userFiles.csv" , cu
             }
         }
         
-        
-        //display here
         if (userInput == 'a') {
             cout << "My Notes" << endl;
             cout << "* * *" << endl;
-            for (const auto& file:myFiles) {
-                cout << file << " - " << currentUser.username << endl;
+            
+            if (myFiles.empty()) {
+                cout << "no files created" << endl;
+            } else {
+                for (const auto& file:myFiles) {
+                    cout << file << " - " << currentUser.username << endl;
+                }
             }
+            
             cout << "- - -" << endl;
         } else if (userInput == 'b') {
             cout << "My Notes" << endl;
             cout << "* * *" << endl;
-            for (const auto& file:myFiles) {
-                cout << file << " - " << currentUser.username << endl;
+            if (myFiles.empty()) {
+                cout << "no files created" << endl;
+            } else {
+                for (const auto& file:myFiles) {
+                    cout << file << " - " << currentUser.username << endl;
+                }
             }
-            
             cout << "- - -" << endl;
-            
             cout << "Public Notes" << endl;
             cout << "* * *" << endl;
-            for (const auto& file:publicFiles) {
-                cout << file << endl;
+            
+            if (publicFiles.empty()) {
+                cout << "no public files found" << endl;
+            } else {
+                for (const auto& file:publicFiles) {
+                    cout << file << endl;
+                }
             }
+            
             cout << "- - -" << endl;
         }
         data.close();
@@ -98,12 +96,38 @@ void displayFileList(string filename, User& currentUser){ //"userFiles.csv" , cu
     }
 }
 
-//void createSet(){
-//    
-//}
+/*
+ //this as function? i am using it twice rn. this needs to return a vector tho 😭
+void createSet(){
+ vector<map<int,Card>> mySet; //list of map
+ map<int,Card> cardMap; //map with int, and card struct
+ Card myCard; //card struct w/question n answer
+ 
+ fstream data((reviewFileName + ".txt"), ios::in);
+ if(data.is_open()){
+     string line;
+     string line2;
+     int lineNo = 1;
+     while(!data.eof()){
+         getline(data, line);
+         getline(data, line2);
+         myCard.question = line;
+         myCard.answer = line2;
+         
+         cardMap.insert(make_pair(lineNo, Card{myCard.question, myCard.answer})); //create a map with pair of int and Card struct that holds question and answer
+         mySet.push_back(cardMap); //add the card inse the vector
+         cardMap.clear();
+         lineNo++;
+     }
+ } else {
+     cout << "Trouble opening file :(" << endl;
+ }
+}
+ */
 
 void review(User& currentUser){
     string reviewFileName;
+    bool thisFileExist;
     vector<map<int,Card>> mySet; //list of map
     map<int,Card> cardMap; //map with int, and card struct
     Card myCard; //card struct w/question n answer
@@ -111,11 +135,17 @@ void review(User& currentUser){
     cout << "+*+ Review +*+" << endl;
     displayFileList("userFiles.csv", currentUser);
     cout << "Type the name of file you want to review from" << endl;
-    cout << "-> ";
-    cin >> reviewFileName;
     
-//    fileExist("userFiles.csv", currentUser.id, reviewFileName); //check if reviewFileName exist
-    
+    do {
+        cout << "-> ";
+        cin >> reviewFileName;
+        thisFileExist = fileExist("userFiles.csv", reviewFileName, false,  currentUser.id);
+        
+        if(!thisFileExist){ //true
+            cout << reviewFileName << " does not exist. Try again!" << endl;
+        }
+    } while (!thisFileExist);
+        
     cout << "Opening " << (reviewFileName + ".txt") << endl;
     fstream data;
     data.open((reviewFileName + ".txt"), ios::in);
@@ -155,6 +185,7 @@ void quiz(User& currentUser){
     string userAnswer;
     char selfGrade = '\0';
     int scoreCount = 0;
+    bool thisFileExist;
     
     vector<map<int,Card>> mySet; //list of map
     map<int,Card> cardMap; //map with int, and card struct
@@ -163,12 +194,20 @@ void quiz(User& currentUser){
     cout << "+*+ Quiz +*+" << endl;
     displayFileList("userFiles.csv", currentUser);
     cout << "Type the name of file you want to quiz from" << endl;
-    cout << "-> ";
-    cin >> quizFileName;
+    
+    do {
+        cout << "-> ";
+        cin >> quizFileName;
+        thisFileExist = fileExist("userFiles.csv", quizFileName, false,  currentUser.id);
+        
+        if(!thisFileExist){ //true
+            cout << quizFileName << " does not exist. Try again!" << endl;
+        }
+    } while (!thisFileExist);
     
     //make this a func ->
-    fileExist("userFiles.csv", currentUser.id, quizFileName);
-//    cout << "Opening " << (quizFileName + ".txt") << endl;
+    fileExist("userFiles.csv", quizFileName, false,  currentUser.id);
+    cout << "Opening " << (quizFileName + ".txt") << endl;
     fstream data;
     data.open((quizFileName + ".txt"), ios::in);
     if(data.is_open()){
@@ -311,33 +350,4 @@ int main(int argc, const char * argv[]) {
  
     for all function
         - remove data from paramater and just call fstream again to avoid issues
- */
-
-/*
- prefered result:
- for 'a':
-     My Notes
-        - display myNote1
-        - display myNote3
-        - display myNote3
- 
- for 'b':
-     My Notes
-        - display myNote1
-        - display myNote3
-        - display myNote3
- 
-     All Notes
-        - display publicNote1
-        - display publicNote2
-        - display publicNote3
- ===
- 
- //first display logged in user note, then display rest of the notes
- //do i store all notes in vector and filter later?
- //or
- //create 2 vecotor?
-    - i can create 2 vector called myNotes and allNote
-    - myNote vector, if(user.id == currentUser.id) - push file in myNote vector
-    - allNote vector, push rest of the files
  */
