@@ -2,83 +2,173 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
+#include <map>
+#include <utility>
 
 #include "utils/userAuth.hpp"
 
 using namespace std;
 
-//struct File{
-//    User currentUser; //id and username
-//    string fileName;
-//    string privacy; //true or false
-//};
+struct File{
+    string fileName;
+    string privacy; //true or false?
+};
 
+struct Card{
+    string question;
+    string answer;
+};
+
+ //pass userFiles.csv
+ bool fileExist(string filename, fstream& data, int checkId, string checkFileName){
+     data.open(filename, ios::in);
+     if(data.is_open()){
+         string line;
+         getline(data, line);
+    //        cout << line <<  "\n";
+         while(getline(data, line, ',')){
+             if(line.empty()) continue;
+             File viewFile;
+             int authorId = stoi(line); //author id
+             getline(data, line, ',');
+             string authorName = line; //author name
+             getline(data, line, ',');
+             viewFile.fileName = line; //filename
+             getline(data, line);
+             viewFile.privacy = line; //privacy
+             
+             //the purpose of this is to check if the currentUser already has a file named x to avoid duplication
+             
+             //check is user exist and if the fileName currently readin matches with checkFileName is same line :P
+             if(authorId == checkId && viewFile.fileName == (checkFileName + ".txt")){
+                 return true;
+             }
+             data.close();
+
+         }
+     } else {
+         cout << "Unable to open file :(" << endl;
+     }
+     return false;
+ }
 
 void Create(User& currentUser){
-    User author;
-    string fileName, privacy;
+    string fileName; //for structa
+    string privacy;
+    string question, answer; //for QnA to append inside a text file
+    bool thisFileExist;
+    
+    fstream data;
+    
     cout << "Create." << endl;
-    author.id = currentUser.id;
-    author.username = currentUser.username;
-    cout << "Name of file: ";
-    cin >> fileName; //check if a filename alerady exist user under the current user
-    cout << "Privacy setting (public/private): ";
-    cin >> privacy;
     
-    /*
-     //add file information into userList .csv
-     
-     fstream data;
-     data.open("userFiles.csv", ios::out | ios::app);
+    do {
+        cout << "Name of file: ";
+        cin >> fileName;
+        thisFileExist = fileExist("userFiles.csv", data, currentUser.id, fileName);
+        
+        if(thisFileExist){ //true
+            cout << fileName << " already exist. Try again!" << endl;
+        }
+    } while (thisFileExist);
+    
+    cout << "Privacy setting:\na. public\nb. private " << endl;
+    do {
+        cout <<  "-> ";
+        cin >> privacy;
+        
+        if (privacy != "a" && privacy != "b") {
+            cout << "Invalid input! Type 'a' for public or 'b' for private" << endl;
+        }
+        
+    } while (privacy != "a" && privacy != "b");
+    
+    //append file name
+    data.open("userFiles.csv", ios::out | ios::app);
      
      if(data.is_open()){
-        data << authorId + "," + authorname + "," + filename + "," + privacy + "\n";
-        data.close();
+         data << to_string(currentUser.id) + "," + currentUser.username + "," + (fileName + ".txt")+ "," + (privacy == "a" ? privacy = "public" : privacy = "private") + "\n";
+         cout << "File successfully added :)" << endl;
+     data.close();
+     } else {
+         cout << "Trouble opening file :(" << endl;
      }
-     */
     
-    /*
-     fstream data;
-     data.open(fileName + ".txt", ios::out | ios::app);
-     
-     if(data.is_open()){
-        //while loop
-            cout << "Question" << endl;
+    //store inside its own function 🥹?
+    //create file
+     data.open((fileName + ".txt"), ios::out | ios::app);
+    if(data.is_open()){
+        char userInput = '\0';
+        int count = 1;
+        while (userInput != 'e'){
+            cin.ignore();
+            cout << "Question " + to_string(count)  + ": ";
+            getline(cin, question);
             data << question << "\n";
-            cout << "Answer" << endl;
-            data << answer << "\n";
-        if user types ceratin character, break loop
-        cout << "Successfully created" << endl;
-        data.close();
-     }
-     */
+            cout << "Answer: " + to_string(count)  + ": ";
+            getline(cin, answer);
+            data << answer; //removed "\n" incase user decide to exit :(
+            do {
+                cout << "Type 'c' to continue or 'e' to exit" << endl;
+                cout << "-> ";
+                cin >> userInput;
+                
+                if (userInput != 'e' && userInput != 'c') {
+                    cout << "Invalid input! ";
+                }
+                
+            } while (userInput != 'e' && userInput != 'c');
+            
+            if(userInput == 'e') {
+                cout << "Total cards created: " << count << endl;
+            } else { //if user doest exit, create a new line for user too add info on ;)
+                data << "\n";
+                count++;
+            }
+    }
     
+    cout << (fileName + ".txt") << " successfully created" << endl;
+     data.close();
+     }
 }
 
-/*
- first create existing file called userFiles.csv
- 
- struct File{
-    int id; //from currentUser
-    string author; //from currentUser
-    string name;
-    string privacy; //private or public
- }
- 
- create()
-    |_currentUser
-    data << "userId (AuthorId), username(Author), FileName, Pivacy Setting << endl;
-    //set info for file
-    |_create a txt file based on file name user inputted
-    |_write on file
-        |_question: *user types question* + '\n' // set char limit?
-        |_answer: *user types answer* + '\n' // set char limit?
-        |_data << qustion << '\n' << answer;
-        |_if user types 'x' << cancel;
-        
- 
+void review(){
+    string reviewFileName = "mikey01.txt";
+    vector<map<int,Card>> mySet; //list of map
+    map<int,Card> cardMap; //map with int, and card struct
+    Card myCard; //card struct w/question n answer
     
- */
+    cout << "File name " << reviewFileName << endl;
+    
+    fstream data;
+    data.open(reviewFileName, ios::in);
+    if(data.is_open()){
+        string line;
+        string line2;
+        int lineNo = 1;
+        while(!data.eof()){
+            getline(data, line);
+            getline(data, line2);
+            myCard.question = line;
+            myCard.answer = line2;
+            
+            cardMap.insert(make_pair(lineNo, Card{myCard.question, myCard.answer})); //create a map with pair of int and Card struct that holds question and answer
+            mySet.push_back(cardMap); //add the card inse the vector
+            cardMap.clear();
+            lineNo++;
+        }
+    } else {
+        cout << "Trouble opening file :(" << endl;
+    }
+    
+    for (const auto& cardmap:mySet) { //for loop for a vector that holds map
+        for (const auto& card:cardmap) { //for loop for map that holds key(int) and value(question, answer)
+            cout << card.first << ". " << "Question: " << card.second.question << endl;
+            cout << "Answer: " << card.second.answer << endl;
+        }
+    }
+}
 
 int main(int argc, const char * argv[]) {
     char userInput = '\0';
@@ -89,13 +179,14 @@ int main(int argc, const char * argv[]) {
     cout << "Current working directory: " << filesystem::current_path() << endl;
     fstream data;
 
+//  to reset
 //    data.open("userFiles.csv", ios::out);
 //    if(data.is_open()){
 //        data << "Author Id, Author Name, Note, Privacy Setting\n";;
 //        data.close();
 //        cout << "Successfully Created :)" << endl;
 //    }
-    
+        
     while (running) {
         cout << "FlashCard" << endl;
         while (userInput != 'c') {
@@ -109,16 +200,16 @@ int main(int argc, const char * argv[]) {
                 cout << isAuthenticated << endl;
                 cout << currentUser.username << endl;
                 //login works-ish
-                if(isAuthenticated){
+                if(isAuthenticated){ //use a while loop dumbass
                     cout << "Please select one: " << endl;
                     cout << "a. Create\nb. Review\nc. Quiz\nd. Logout" << endl;
                     cout << "-> ";
                     cin >> userInput;
                     if (userInput == 'a') {
-                        cout << "Create." << endl;
                         Create(currentUser);
                     } else if(userInput == 'b'){
                         cout << "Review." << endl;
+                        review();
                     } else if (userInput == 'c'){
                         cout << "Quiz." << endl;
                     } else if (userInput == 'd'){
@@ -143,3 +234,25 @@ int main(int argc, const char * argv[]) {
     cout << "youhoo 👋" << endl;
     return 0;
 }
+
+/*
+ manage file/folder
+ |_data
+    |_.csv
+    |_.txt
+ |_utils
+ |_main.cpp and others
+ */
+
+/*
+ work on:
+    - validate fileName? (if there are spaces - ask user to type again etc.)
+ 
+    - fixing fileExist()
+    - privacy setting (userinput == "public" || "private")
+    - while loop for q n a
+ 
+    Review branch
+    - display file name, use similar function to fileExist()
+        - display file name but filter based on user
+ */
