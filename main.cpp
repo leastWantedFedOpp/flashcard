@@ -138,7 +138,7 @@ void review(){
             
             cardMap.insert(make_pair(lineNo, Card{myCard.question, myCard.answer})); //create a map with pair of int and Card struct that holds question and answer
             mySet.push_back(cardMap); //add the card inse the vector
-            
+            cardMap.clear();
             lineNo++;
         }
     } else {
@@ -151,23 +151,6 @@ void review(){
             cout << "Answer: " << card.second.answer << endl;
         }
     }
-    
-    /*
-     currently prints in following order :(
-     qna1
-     -
-     qna1
-     qna2
-     -
-     qna1
-     qna2
-     qna3
-     -
-     qna1
-     qna2
-     qna3
-     qna4
-     */
 }
 
 int main(int argc, const char * argv[]) {
@@ -255,66 +238,4 @@ int main(int argc, const char * argv[]) {
     Review branch
     - display file name, use similar function to fileExist()
         - display file name but filter based on user
- 
- */
-
-// initial plan for reading and writing txt files, extracting q n a and storing it to struct
-/*
- the odd line numbers would hold questions, even would hold answeres
- keep on going while(!eof){}
- 
- ex. example.txt
- 
- what day is today? //1 question
- today is monday //2 answer
- what dat is tomorrow? //3 question
- tomorrow is tuesday //4 answer
- 
- 
- getline(file, line);
- 
- */
-
- //alternative to writing question and answer into txt file
- //explanation:
- /*
-  might have to remove '\n\' after data << question << '\n' (same from answer)
-  the plan now:
-  first wrap question with '[?' and '?]'
-  qStartingPoint and qEndingPoint
-  
-  wrap answer with '{-' and '-}'
-  aStartingPoint and aEndingPoint
-  
-  card 1;
-  initial starting point will be from 0
-  end at the answer ending point aEndingPoint;
-  
-  card2:
-  starting point will be from prev answer ending point (aEndingPoint + 1) //using substr till the end of the text file
-  
-  end of the text file means i have to count char of text
-  
-  use substring to extract the info btwn each
-  store question and answer inside a struct inside vector
-  
-  
-  read the entire fil
- */
-
-/*
- 
- string question = "[?Is this a questions??]"; //len = 24
- string answer = "{-Thi is the answer, i think.-}";
- int startPoint = unsigned( question.find("[?") ) + 2;
- int endPoint = unsigned( question.find("?]") - 2 );
- cout << question.find("[?") << endl;
- cout << question.find("?]") << endl;
-
- cout << "Starting point (index) : " << startPoint << endl;
- cout << "End point (index) : " << endPoint << endl;
- 
- cout << question << endl;
- cout << question.substr(startPoint, endPoint) << endl;
- 
  */

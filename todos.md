@@ -1,6 +1,6 @@
 # Todos
 
-## the workflow? 😵‍💫...
+## the workflow? 😵‍💫
 
 1. welcome 👋 login or create an account <mark>✅ works enough 💀</mark>
     - open file with user list stored
@@ -48,3 +48,14 @@
         - publicNotes
     4. delete ❌
     5. update 🙃
+
+## so far
+- login and create account :)
+- create and review :)
+
+
+## things to work on
+- review and quiz 
+    - when users select, ask for public or private, display based on input
+    - function that displays all public userFiles ( displayFiles() )
+        - function that display userFiles that belongs to logged in user
