@@ -14,45 +14,6 @@ struct Card{
     string answer;
 };
 
-//note
-
-void review(){
-    string reviewFileName = "mikey01.txt";
-    vector<map<int,Card>> mySet; //list of map
-    map<int,Card> cardMap; //map with int, and card struct
-    Card myCard; //card struct w/question n answer
-    
-    cout << "File name " << reviewFileName << endl;
-    
-    fstream data;
-    data.open(reviewFileName, ios::in);
-    if(data.is_open()){
-        string line;
-        string line2;
-        int lineNo = 1;
-        while(!data.eof()){
-            getline(data, line);
-            getline(data, line2);
-            myCard.question = line;
-            myCard.answer = line2;
-            
-            cardMap.insert(make_pair(lineNo, Card{myCard.question, myCard.answer})); //create a map with pair of int and Card struct that holds question and answer
-            mySet.push_back(cardMap); //add the card inse the vector
-            cardMap.clear();
-            lineNo++;
-        }
-    } else {
-        cout << "Trouble opening file :(" << endl;
-    }
-    
-    for (const auto& cardmap:mySet) { //for loop for a vector that holds map
-        for (const auto& card:cardmap) { //for loop for map that holds key(int) and value(question, answer)
-            cout << card.first << ". " << "Question: " << card.second.question << endl;
-            cout << "Answer: " << card.second.answer << endl;
-        }
-    }
-}
-
 /*
  review
  |_ask my file or all file
@@ -65,22 +26,12 @@ void review(){
         |_quiz
  */
 
-void quiz(){
-    /*
-     if(userInput == 'a'){
-        displayFiles() //display notes that belong to users
-     } else {
-        displauFiles() //display all notes that has privacySetting set to public
-     }
-     */
-}
-
 //does not work, file opens but does not read
 //first just have it display fileName and their author ;)
 void displayFileList(string filename, User& currentUser){ //"userFiles.csv" , currentUser, userInput
     fstream data(filename, ios::in);
     char userInput = '\0';
-    cout << "View:\na. My notes\nb. All notes" << endl; //when user select all nots first display their notes then All notes. if usere select my notes only display thri notes;
+    cout << "a. My notes\nb. All notes" << endl; //when user select all nots first display their notes then All notes. if usere select my notes only display thri notes;
     do {
         cout << "-> ";
         cin >> userInput;
@@ -88,7 +39,6 @@ void displayFileList(string filename, User& currentUser){ //"userFiles.csv" , cu
         if(userInput != 'a' && userInput != 'b'){
             cout << "Invalid input! Type 'a' to view your notes or 'b' to view all notes" << endl;
         }
-        
     } while (userInput != 'a' && userInput != 'b');
     
     if(data.is_open()){
@@ -117,33 +67,160 @@ void displayFileList(string filename, User& currentUser){ //"userFiles.csv" , cu
             }
         }
         
+        
         //display here
-        //if userinput == 'a' , user for loop to display from myNotes vector
         if (userInput == 'a') {
             cout << "My Notes" << endl;
+            cout << "* * *" << endl;
             for (const auto& file:myFiles) {
                 cout << file << " - " << currentUser.username << endl;
             }
+            cout << "- - -" << endl;
         } else if (userInput == 'b') {
             cout << "My Notes" << endl;
+            cout << "* * *" << endl;
             for (const auto& file:myFiles) {
                 cout << file << " - " << currentUser.username << endl;
             }
-            cout << "===" << endl;
+            
+            cout << "- - -" << endl;
+            
             cout << "Public Notes" << endl;
+            cout << "* * *" << endl;
             for (const auto& file:publicFiles) {
                 cout << file << endl;
             }
+            cout << "- - -" << endl;
         }
-        
         data.close();
     } else {
         cout << "Unable to open file :(" << endl;
     }
 }
 
+//void createSet(){
+//    
+//}
+
+void review(User& currentUser){
+    string reviewFileName;
+    vector<map<int,Card>> mySet; //list of map
+    map<int,Card> cardMap; //map with int, and card struct
+    Card myCard; //card struct w/question n answer
+    
+    cout << "+*+ Review +*+" << endl;
+    displayFileList("userFiles.csv", currentUser);
+    cout << "Type the name of file you want to review from" << endl;
+    cout << "-> ";
+    cin >> reviewFileName;
+    
+//    fileExist("userFiles.csv", currentUser.id, reviewFileName); //check if reviewFileName exist
+    
+    cout << "Opening " << (reviewFileName + ".txt") << endl;
+    fstream data;
+    data.open((reviewFileName + ".txt"), ios::in);
+    if(data.is_open()){
+        string line;
+        string line2;
+        int lineNo = 1;
+        while(!data.eof()){
+            getline(data, line);
+            getline(data, line2);
+            myCard.question = line;
+            myCard.answer = line2;
+            
+            cardMap.insert(make_pair(lineNo, Card{myCard.question, myCard.answer})); //create a map with pair of int and Card struct that holds question and answer
+            mySet.push_back(cardMap); //add the card inse the vector
+            cardMap.clear();
+            lineNo++;
+        }
+    } else {
+        cout << "Trouble opening file :(" << endl;
+    }
+    cout << "~ ~ ~ ~ ~ ~ " << endl;
+    for (const auto& cardmap:mySet) { //for loop for a vector that holds map
+        for (const auto& card:cardmap) { //for loop for map that holds key(int) and value(question, answer)
+            cout << "Question " << card.first << " : " << card.second.question << endl;
+            cout << "Answer: " << card.second.answer << endl;
+            cout << "~ ~ ~ ~ ~ ~ " << endl;
+
+        }
+    }
+    
+}
+
+
+void quiz(User& currentUser){
+    string quizFileName;
+    string userAnswer;
+    char selfGrade = '\0';
+    int scoreCount = 0;
+    
+    vector<map<int,Card>> mySet; //list of map
+    map<int,Card> cardMap; //map with int, and card struct
+    Card myCard; //card struct w/question n answer
+    
+    cout << "+*+ Quiz +*+" << endl;
+    displayFileList("userFiles.csv", currentUser);
+    cout << "Type the name of file you want to quiz from" << endl;
+    cout << "-> ";
+    cin >> quizFileName;
+    
+    //make this a func ->
+    fileExist("userFiles.csv", currentUser.id, quizFileName);
+//    cout << "Opening " << (quizFileName + ".txt") << endl;
+    fstream data;
+    data.open((quizFileName + ".txt"), ios::in);
+    if(data.is_open()){
+        string line;
+        string line2;
+        int lineNo = 1;
+        while(!data.eof()){
+            getline(data, line);
+            getline(data, line2);
+            myCard.question = line;
+            myCard.answer = line2;
+            cardMap.insert(make_pair(lineNo, Card{myCard.question, myCard.answer}));
+            mySet.push_back(cardMap);
+            cardMap.clear();
+            lineNo++;
+        }
+    } else {
+        cout << "Trouble opening file :(" << endl;
+    }
+    // <-
+    
+    cout << "\nYour answers are graded based on an honor system.\nAfter you type in your answer. The program will display the correct answer.\nYou'll be asked to compare your answer with the correct answer.\n" <<  endl;
+    cout << "Do your best. Good luck!\n" << endl;
+    for (const auto& cardmap:mySet) {
+        for (const auto& card:cardmap) {
+            cout << "~ ~ ~ ~ ~ ~ " << endl;
+            cout << "Question " << card.first << " : " << card.second.question << endl;
+            cout << "Your answer: ";
+            cin.ignore();
+            getline(cin, userAnswer);
+            cout << "~ ~ ~ ~ ~ ~ " << endl;
+            cout << "Correct answer: " << card.second.answer << endl;
+            cout << "Did you get it right? (y)yes | (n)no" << endl;
+            do {
+                cout << "-> ";
+                cin >> selfGrade;
+            } while (selfGrade != 'y' && selfGrade != 'n');
+           
+            if(selfGrade == 'y'){
+                scoreCount++;
+            }
+        }
+    }
+    cout << "+ + +" << endl;
+    cout << "You scored " << scoreCount << " / " << mySet.size() << endl;
+    cout << "+ + +" << endl;
+}
+
+
 int main(int argc, const char * argv[]) {
     char userInput = '\0';
+    char userInput2 = '\0';
     bool isAuthenticated = false;
     bool running = true;
     User currentUser = {0,""}; //id set to 0, username set to empty string
@@ -172,21 +249,21 @@ int main(int argc, const char * argv[]) {
                 cout << isAuthenticated << endl;
                 cout << currentUser.username << endl;
                 //login works-ish
-                if(isAuthenticated){ //use a while loop dumbass
+                while (isAuthenticated){
                     cout << "Please select one: " << endl;
                     cout << "a. Create\nb. Review\nc. Quiz\nd. Display files\ne. Logout" << endl;
                     cout << "-> ";
-                    cin >> userInput;
-                    if (userInput == 'a') {
+                    cin >> userInput2;
+                    if (userInput2 == 'a') {
                         Create(currentUser);
-                    } else if(userInput == 'b'){
-                        review();
-                    } else if (userInput == 'c'){
-                        cout << "Quiz." << endl;
-                    } else if (userInput == 'd'){
+                    } else if(userInput2 == 'b'){
+                        review(currentUser);
+                    } else if (userInput2 == 'c'){
+                        quiz(currentUser);
+                    } else if (userInput2 == 'd'){
 //                        cout << "Display file list." << endl;
                         displayFileList("userFiles.csv", currentUser);
-                    } else if (userInput == 'e'){
+                    } else if (userInput2 == 'e'){
                         cout << "Logout." << endl;
                         isAuthenticated = false;
                     }

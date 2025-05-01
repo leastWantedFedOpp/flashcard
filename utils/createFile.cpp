@@ -2,8 +2,11 @@
 #include <fstream>
 #include "createFile.hpp"
 
-bool fileExist(string filename, fstream& data, int checkId, string checkFileName){
-    data.open(filename, ios::in);
+
+//this currenly check when user tries to create a file, see if file already exist under same user
+//have this also just check if file exist
+bool fileExist(string filename, int checkId, string checkFileName){
+    fstream data(filename, ios::in);
     if(data.is_open()){
         string line;
         getline(data, line);
@@ -47,7 +50,7 @@ void Create(User& currentUser){
     do {
         cout << "Name of file: ";
         cin >> fileName;
-        thisFileExist = fileExist("userFiles.csv", data, currentUser.id, fileName);
+        thisFileExist = fileExist("userFiles.csv", currentUser.id, fileName);
         
         if(thisFileExist){ //true
             cout << fileName << " already exist. Try again!" << endl;
