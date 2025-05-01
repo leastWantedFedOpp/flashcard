@@ -54,6 +54,54 @@ void review(){
     }
 }
 
+/*
+ review
+ |_ask my file or all file
+    |_displayFileList based on input
+        |_review
+ 
+ quiz
+ |_ask my file or all file
+    |_displayFileList based on input
+        |_quiz
+ */
+
+void quiz(){
+    /*
+     if(userInput == 'a'){
+        displayFiles() //display notes that belong to users
+     } else {
+        displauFiles() //display all notes that has privacySetting set to public
+     }
+     */
+}
+
+//first just have it display fileName and their author ;)
+void displayFileList(string filename, fstream& data){ //"userFiles.csv"
+    data.open(filename, ios::in);
+    if(data.is_open()){
+        string line;
+        getline(data, line);
+//        cout << line <<  "\n";
+        while(getline(data, line, ',')){
+            if(line.empty()) continue;
+            File displayFile;
+            int authorId = stoi(line); //author id
+            getline(data, line, ',');
+            string authorName = line; //author name
+            getline(data, line, ',');
+            displayFile.fileName = line; //filename
+            getline(data, line);
+            displayFile.privacy = line; //privacy
+
+            cout << displayFile.fileName << " - " << authorName << "-" << authorId<< endl;
+        }
+        data.close();
+    } else {
+        cout << "Unable to open file :(" << endl;
+    }
+}
+
 int main(int argc, const char * argv[]) {
     char userInput = '\0';
     bool isAuthenticated = false;
@@ -86,17 +134,19 @@ int main(int argc, const char * argv[]) {
                 //login works-ish
                 if(isAuthenticated){ //use a while loop dumbass
                     cout << "Please select one: " << endl;
-                    cout << "a. Create\nb. Review\nc. Quiz\nd. Logout" << endl;
+                    cout << "a. Create\nb. Review\nc. Quiz\nd. Display files\ne. Logout" << endl;
                     cout << "-> ";
                     cin >> userInput;
                     if (userInput == 'a') {
                         Create(currentUser);
                     } else if(userInput == 'b'){
-                        cout << "Review." << endl;
                         review();
                     } else if (userInput == 'c'){
                         cout << "Quiz." << endl;
                     } else if (userInput == 'd'){
+//                        cout << "Display file list." << endl;
+                        displayFileList("userFiles.csv", data);
+                    } else if (userInput == 'e'){
                         cout << "Logout." << endl;
                         isAuthenticated = false;
                     }
