@@ -83,18 +83,23 @@ void displayFileList(string filename, fstream& data){ //"userFiles.csv"
         string line;
         getline(data, line);
         //goes up to here but does not run while loop?
+        cout << "I am here and I have access to " << filename << " file" << endl;
         while(getline(data, line, ',')){
             if(line.empty()) continue;
+
+            User user;
             File displayFile;
-            int authorId = stoi(line); //author id
+            
+            user.id = stoi(line); //author id
             getline(data, line, ',');
-            string authorName = line; //author name
+            user.username = line; //author name
             getline(data, line, ',');
             displayFile.fileName = line; //filename
             getline(data, line);
             displayFile.privacy = line; //privacy
+            
+            cout << displayFile.fileName << " - " << user.username << endl;
 
-            cout << displayFile.fileName << " " << authorName << " " << authorId  << displayFile.privacy << endl;
         }
         data.close();
     } else {
@@ -122,7 +127,7 @@ int main(int argc, const char * argv[]) {
     while (running) {
         cout << "FlashCard" << endl;
         while (userInput != 'c') {
-            cout << "a. Login\nb. Create an account\nc. Exit\nd. Display UserList" << endl;
+            cout << "a. Login\nb. Create an account\nc. Exit\nd. Display UserList\ne. Display UserFiles" << endl;
             cout << "-> ";
             cin >> userInput;
             
@@ -159,6 +164,8 @@ int main(int argc, const char * argv[]) {
                 running = false;
             } else if (userInput == 'd') { //just to view current users from .csv file
                 displayUsers("userList.csv", data);
+            } else if (userInput == 'e') {
+                displayFileList("userFiles.csv", data);
             } else {
                 cout << "Invalid input" << endl;
             }
