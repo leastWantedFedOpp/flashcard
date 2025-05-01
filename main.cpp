@@ -14,7 +14,6 @@ struct Card{
     string answer;
 };
 
-
 //note
 
 void review(){
@@ -76,13 +75,14 @@ void quiz(){
      */
 }
 
+//does not work, file opens but does not read
 //first just have it display fileName and their author ;)
 void displayFileList(string filename, fstream& data){ //"userFiles.csv"
     data.open(filename, ios::in);
     if(data.is_open()){
         string line;
         getline(data, line);
-//        cout << line <<  "\n";
+        //goes up to here but does not run while loop?
         while(getline(data, line, ',')){
             if(line.empty()) continue;
             File displayFile;
@@ -94,7 +94,7 @@ void displayFileList(string filename, fstream& data){ //"userFiles.csv"
             getline(data, line);
             displayFile.privacy = line; //privacy
 
-            cout << displayFile.fileName << " - " << authorName << "-" << authorId<< endl;
+            cout << displayFile.fileName << " " << authorName << " " << authorId  << displayFile.privacy << endl;
         }
         data.close();
     } else {
