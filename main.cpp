@@ -21,7 +21,7 @@ struct Card{
 };
 
  //pass userFiles.csv
- bool fileExist(string filename, fstream& data, int checkId, string checkUsername, string checkFileName){
+ bool fileExist(string filename, fstream& data, int checkId, string checkFileName){
      data.open(filename, ios::in);
      if(data.is_open()){
          string line;
@@ -38,15 +38,15 @@ struct Card{
              getline(data, line);
              viewFile.privacy = line; //privacy
              
-             if(authorId == checkId && authorName == checkUsername) {
-                 if(viewFile.fileName == filename){
-                     return true; //yes it does exist
-                 } else {
-                     return false;
-                 }
+             //the purpose of this is to check if the currentUser already has a file named x to avoid duplication
+             
+             //check is user exist and if the fileName currently readin matches with checkFileName is same line :P
+             if(authorId == checkId && viewFile.fileName == (checkFileName + ".txt")){
+                 return true;
              }
+             data.close();
+
          }
-         data.close();
      } else {
          cout << "Unable to open file :(" << endl;
      }
@@ -54,26 +54,35 @@ struct Card{
  }
 
 void Create(User& currentUser){
-    string fileName; //for struct
+    string fileName; //for structa
     string privacy;
     string question, answer; //for QnA to append inside a text file
+    bool thisFileExist;
+    
     fstream data;
     
     cout << "Create." << endl;
-    cout << "Name of file: ";
-    cin >> fileName;
     
-//    if(fileExist("userFiles.csv", data, currentUser.id, currentUser.username, fileName)){
-//        cout << "you're gud. continue 😘" << endl;
-//    } else {
-//        cout << "file already exist, try again 🙃" << endl;
-//    }
+    do {
+        cout << "Name of file: ";
+        cin >> fileName;
+        thisFileExist = fileExist("userFiles.csv", data, currentUser.id, fileName);
+        
+        if(thisFileExist){ //true
+            cout << fileName << " already exist. Try again!" << endl;
+        }
+    } while (thisFileExist);
     
     cout << "Privacy setting:\na. public\nb. private " << endl;
     do {
         cout <<  "-> ";
         cin >> privacy;
-    } while (privacy != "a" || privacy != "b");
+        
+        if (privacy != "a" && privacy != "b") {
+            cout << "Invalid input! Type 'a' for public or 'b' for private" << endl;
+        }
+        
+    } while (privacy != "a" && privacy != "b");
     
     //append file name
     data.open("userFiles.csv", ios::out | ios::app);
@@ -100,9 +109,17 @@ void Create(User& currentUser){
             cout << "Answer: " + to_string(count)  + ": ";
             getline(cin, answer);
             data << answer; //removed "\n" incase user decide to exit :(
-            cout << "Type 'c' to continue or 'e' to exit" << endl;
-            cout << "-> ";
-            cin >> userInput;
+            do {
+                cout << "Type 'c' to continue or 'e' to exit" << endl;
+                cout << "-> ";
+                cin >> userInput;
+                
+                if (userInput != 'e' && userInput != 'c') {
+                    cout << "Invalid input! ";
+                }
+                
+            } while (userInput != 'e' && userInput != 'c');
+            
             if(userInput == 'e') {
                 cout << "Total cards created: " << (count == 1 ? count = 1: count - 1) << endl;
             } else { //if user doest exit, create a new line for user too add info on ;)
@@ -117,7 +134,7 @@ void Create(User& currentUser){
 }
 
 void review(){
-    string reviewFileName = "MikeyQNA.txt";
+    string reviewFileName = "mikey01.txt";
     vector<map<int,Card>> mySet; //list of map
     map<int,Card> cardMap; //map with int, and card struct
     Card myCard; //card struct w/question n answer
@@ -189,7 +206,7 @@ int main(int argc, const char * argv[]) {
                     cout << "-> ";
                     cin >> userInput;
                     if (userInput == 'a') {
-//                        Create(currentUser);
+                        Create(currentUser);
                     } else if(userInput == 'b'){
                         cout << "Review." << endl;
                         review();
