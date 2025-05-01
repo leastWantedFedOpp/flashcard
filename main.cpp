@@ -14,6 +14,9 @@ struct Card{
     string answer;
 };
 
+
+//note
+
 void review(){
     string reviewFileName = "mikey01.txt";
     vector<map<int,Card>> mySet; //list of map
