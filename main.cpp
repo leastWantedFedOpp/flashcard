@@ -100,9 +100,9 @@ void Create(User& currentUser){
      data.open((fileName + ".txt"), ios::out | ios::app);
     if(data.is_open()){
         char userInput = '\0';
+        int count = 1;
         while (userInput != 'e'){
             cin.ignore();
-            int count = 1;
             cout << "Question " + to_string(count)  + ": ";
             getline(cin, question);
             data << question << "\n";
@@ -121,14 +121,14 @@ void Create(User& currentUser){
             } while (userInput != 'e' && userInput != 'c');
             
             if(userInput == 'e') {
-                cout << "Total cards created: " << (count == 1 ? count = 1: count - 1) << endl;
+                cout << "Total cards created: " << count << endl;
             } else { //if user doest exit, create a new line for user too add info on ;)
                 data << "\n";
+                count++;
             }
-            count++;
     }
     
-        cout << (fileName + ".txt") << " successfully created" << endl;
+    cout << (fileName + ".txt") << " successfully created" << endl;
      data.close();
      }
 }
