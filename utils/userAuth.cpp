@@ -1,10 +1,12 @@
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
+#include <ctime>
 #include "userAuth.hpp"
 
 using namespace std;
 
-int genUserid(){
+int genUserId(){
     srand(unsigned(time(0)));
     int randGenUserId = rand() % 9000 + 1000;
     return randGenUserId;
@@ -88,7 +90,7 @@ void createAccount(string filename, fstream& data, User& currentUser){
     string username, password;
             
     cout << "Create an account" << endl;
-    id = genUserid();
+    id = genUserId();
     cout << "Username: ";
     cin >> username;
     
