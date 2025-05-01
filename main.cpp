@@ -92,11 +92,12 @@ void displayFileList(string filename, User& currentUser){ //"userFiles.csv" , cu
     } while (userInput != 'a' && userInput != 'b');
     
     if(data.is_open()){
+        vector<string> myFiles;
+        vector<string> publicFiles;
         string line;
         getline(data, line);
         while(getline(data, line, ',')){
             if(line.empty()) continue;
-
             User user;
             File displayFile;
             
@@ -107,53 +108,34 @@ void displayFileList(string filename, User& currentUser){ //"userFiles.csv" , cu
             displayFile.fileName = line; //filename
             getline(data, line);
             displayFile.privacy = line; //privacy
-           
              //users will be authenticated
-            switch (userInput) {
-                case 'a':
-                    //display user files
-                    if(user.id == currentUser.id){ //if id of this file == currentUser id
-                        cout << displayFile.fileName << " - " << displayFile.privacy << " - " << user.username << endl;
-                    }
-                    break;
-                case 'b':
-                    //display user + public files
-                    cout << displayFile.fileName << " - " << displayFile.privacy << " - " << user.username << endl;
-                    break;
-                default:
-                    break;
+            
+            if(user.id == currentUser.id){
+                myFiles.push_back(displayFile.fileName);
+            } else if(displayFile.privacy == "public"){
+                publicFiles.push_back(displayFile.fileName + " - " + user.username);
             }
-            
-            /*
-             prefered result:
-             for 'a':
-                 My Notes
-                    - display myNote1
-                    - display myNote3
-                    - display myNote3
-             
-             for 'b':
-                 My Notes
-                    - display myNote1
-                    - display myNote3
-                    - display myNote3
-             
-                 All Notes
-                    - display publicNote1
-                    - display publicNote2
-                    - display publicNote3
-             ===
-             
-             //first display logged in user note, then display rest of the notes
-             //do i store all notes in vector and filter later?
-             //or
-             //create 2 vecotor?
-                - i can create 2 vector called myNotes and allNote
-                - myNote vector, if(user.id == currentUser.id) - push file in myNote vector
-                - allNote vector, push rest of the files
-             */
-            
         }
+        
+        //display here
+        //if userinput == 'a' , user for loop to display from myNotes vector
+        if (userInput == 'a') {
+            cout << "My Notes" << endl;
+            for (const auto& file:myFiles) {
+                cout << file << " - " << currentUser.username << endl;
+            }
+        } else if (userInput == 'b') {
+            cout << "My Notes" << endl;
+            for (const auto& file:myFiles) {
+                cout << file << " - " << currentUser.username << endl;
+            }
+            cout << "===" << endl;
+            cout << "Public Notes" << endl;
+            for (const auto& file:publicFiles) {
+                cout << file << endl;
+            }
+        }
+        
         data.close();
     } else {
         cout << "Unable to open file :(" << endl;
@@ -252,4 +234,33 @@ int main(int argc, const char * argv[]) {
  
     for all function
         - remove data from paramater and just call fstream again to avoid issues
+ */
+
+/*
+ prefered result:
+ for 'a':
+     My Notes
+        - display myNote1
+        - display myNote3
+        - display myNote3
+ 
+ for 'b':
+     My Notes
+        - display myNote1
+        - display myNote3
+        - display myNote3
+ 
+     All Notes
+        - display publicNote1
+        - display publicNote2
+        - display publicNote3
+ ===
+ 
+ //first display logged in user note, then display rest of the notes
+ //do i store all notes in vector and filter later?
+ //or
+ //create 2 vecotor?
+    - i can create 2 vector called myNotes and allNote
+    - myNote vector, if(user.id == currentUser.id) - push file in myNote vector
+    - allNote vector, push rest of the files
  */
