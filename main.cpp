@@ -10,6 +10,22 @@
 
 using namespace std;
 
+//void update(){
+    /*
+     current user
+     display all files
+        - or display files that beling to user
+     choose a file
+     read content inside file
+     ask user to add/replace/delete
+        - if add, ios::append then just append
+        - if replace/change, choose number based on number,
+            choose new content, then replace with old content?
+        - if delete, then its a pain in the ass T.T
+     */
+//}
+
+
 int main(int argc, const char * argv[]) {
     char userInput = '\0';
     char userInput2 = '\0';
@@ -53,7 +69,7 @@ int main(int argc, const char * argv[]) {
                         } else if (userInput2 == 'd'){
                             displayFileList("userFiles.csv", currentUser);
                         } else if (userInput2 == 'e'){
-                            cout << "Logout." << endl;
+                            cout << "Logging out..." << endl;
                             currentUser = {0,""};
                             isAuthenticated = false;
                         }
