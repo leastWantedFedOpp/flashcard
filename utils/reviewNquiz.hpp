@@ -1,13 +1,22 @@
-//
-//  reviewNquiz.hpp
-//  FlashCard
-//
-//  Created by Chhiring D. Lama on 5/1/25.
-//
-
 #ifndef reviewNquiz_hpp
 #define reviewNquiz_hpp
 
+#include "userAuth.hpp"
 #include <stdio.h>
+
+
+struct Card{
+    std::string question;
+    std::string answer;
+};
+
+vector<map<int,Card>> createSet(string&);
+
+void displayFileList(string , User& );
+
+void review(User& );
+
+void quiz(User& );
+
 
 #endif /* reviewNquiz_hpp */

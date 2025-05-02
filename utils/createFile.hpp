@@ -1,5 +1,3 @@
-#include <iostream>
-
 #ifndef createFile_hpp
 #define createFile_hpp
 #include "userAuth.hpp" //for User struct

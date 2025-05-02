@@ -2,7 +2,6 @@
 #include <fstream>
 #include "createFile.hpp"
 
-
 //this currenly check when user tries to create a file, see if file already exist under same user
 //have this also just check if file exist
 bool fileExist(string filename, string checkFileName, bool forCreate  ,int checkId ){
