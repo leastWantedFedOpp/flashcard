@@ -95,8 +95,6 @@ void displayFileList(string filename, User& currentUser){
     }
 }
 
-
- //this as function? i am using it twice rn. this needs to return a vector tho 😭
 vector<map<int,Card>> createSet(string& filename){
      vector<map<int,Card>> mySet; //list of map
      map<int,Card> cardMap; //map with int, and card struct
@@ -148,27 +146,6 @@ void review(User& currentUser){
     
     mySet = createSet(reviewFileName);
     
-//    fstream data;
-//    data.open((reviewFileName + ".txt"), ios::in);
-//    if(data.is_open()){
-//        string line;
-//        string line2;
-//        int lineNo = 1;
-//        while(!data.eof()){
-//            getline(data, line);
-//            getline(data, line2);
-//            myCard.question = line;
-//            myCard.answer = line2;
-//            
-//            cardMap.insert(make_pair(lineNo, Card{myCard.question, myCard.answer})); //create a map with pair of int and Card struct that holds question and answer
-//            mySet.push_back(cardMap); //add the card inse the vector
-//            cardMap.clear();
-//            lineNo++;
-//        }
-//    } else {
-//        cout << "Trouble opening file :(" << endl;
-//    }
-    
     cout << "~ ~ ~ ~ ~ ~ " << endl;
     for (const auto& cardmap:mySet) { //for loop for a vector that holds map
         for (const auto& card:cardmap) { //for loop for map that holds key(int) and value(question, answer)
@@ -189,8 +166,6 @@ void quiz(User& currentUser){
     bool thisFileExist;
     
     vector<map<int,Card>> mySet; //list of map
-    map<int,Card> cardMap; //map with int, and card struct
-    Card myCard; //card struct w/question n answer
     
     cout << "+*+ Quiz +*+" << endl;
     displayFileList("userFiles.csv", currentUser);
@@ -206,29 +181,9 @@ void quiz(User& currentUser){
         }
     } while (!thisFileExist);
     
-    //make this a func ->
     fileExist("userFiles.csv", quizFileName, false,  currentUser.id);
     cout << "Opening " << (quizFileName + ".txt") << endl;
-    fstream data;
-    data.open((quizFileName + ".txt"), ios::in);
-    if(data.is_open()){
-        string line;
-        string line2;
-        int lineNo = 1;
-        while(!data.eof()){
-            getline(data, line);
-            getline(data, line2);
-            myCard.question = line;
-            myCard.answer = line2;
-            cardMap.insert(make_pair(lineNo, Card{myCard.question, myCard.answer}));
-            mySet.push_back(cardMap);
-            cardMap.clear();
-            lineNo++;
-        }
-    } else {
-        cout << "Trouble opening file :(" << endl;
-    }
-    // <-
+    mySet = createSet(quizFileName);
     
     cout << "\nYour answers are graded based on an honor system.\nAfter you type in your answer. The program will display the correct answer.\nYou'll be asked to compare your answer with the correct answer.\n" <<  endl;
     cout << "Do your best. Good luck!\n" << endl;
