@@ -31,52 +31,48 @@ int main(int argc, const char * argv[]) {
     while (running) {
         cout << "FlashCard" << endl;
         while (userInput != 'c') {
-            cout << "a. Login\nb. Create an account\nc. Exit\nd. Display UserList\ne. Display UserFiles" << endl;
+            cout << "a. Login\nb. Create an account\nc. Exit" << endl;
             cout << "-> ";
             cin >> userInput;
             
-            if (userInput == 'a') {
-                cout << "Logging in..." << endl;
-                logIn("userList.csv", data, currentUser, isAuthenticated);
-                cout << isAuthenticated << endl;
-                cout << currentUser.username << endl;
-                //login works-ish
-                while (isAuthenticated){
-                    cout << "Please select one: " << endl;
-                    cout << "a. Create\nb. Review\nc. Quiz\nd. Display files\ne. Logout" << endl;
-                    cout << "-> ";
-                    cin >> userInput2;
-                    if (userInput2 == 'a') {
-                        Create(currentUser);
-                    } else if(userInput2 == 'b'){
-                        review(currentUser);
-                    } else if (userInput2 == 'c'){
-                        quiz(currentUser);
-                    } else if (userInput2 == 'd'){
-//                        cout << "Display file list." << endl;
-                        displayFileList("userFiles.csv", currentUser);
-                    } else if (userInput2 == 'e'){
-                        cout << "Logout." << endl;
-                        isAuthenticated = false;
+            switch (userInput) {
+                case 'a':
+                    logIn("userList.csv", data, currentUser, isAuthenticated);
+                    while (isAuthenticated){
+                        cout << "Hello, " << currentUser.username << endl;
+                        cout << "Please select one: " << endl;
+                        cout << "a. Create\nb. Review\nc. Quiz\nd. Display files\ne. Logout" << endl;
+                        cout << "-> ";
+                        cin >> userInput2;
+                        if (userInput2 == 'a') {
+                            Create(currentUser);
+                        } else if(userInput2 == 'b'){
+                            review(currentUser);
+                        } else if (userInput2 == 'c'){
+                            quiz(currentUser);
+                        } else if (userInput2 == 'd'){
+                            displayFileList("userFiles.csv", currentUser);
+                        } else if (userInput2 == 'e'){
+                            cout << "Logout." << endl;
+                            currentUser = {0,""};
+                            isAuthenticated = false;
+                        }
                     }
-                }
-            } else if( userInput == 'b') {
-                cout << "Creating account..." << endl;
-                createAccount("userList.csv", data, currentUser);
-            } else if( userInput == 'c') {
-                cout << "Exiting..." << endl;
-                running = false;
-            } else if (userInput == 'd') { //just to view current users from .csv file
-                displayUsers("userList.csv", data);
-            } else if (userInput == 'e') {
-                displayFileList("userFiles.csv", currentUser);
-            } else {
-                cout << "Invalid input" << endl;
+                    break;
+                case 'b':
+                    createAccount("userList.csv", data, currentUser);
+                    break;
+                case 'c':
+                    cout << "Exiting..." << endl;
+                    running = false;
+                    break;
+                default:
+                    cout << "Invalid input" << endl;
+                    break;
             }
         }
     }
-    
-    cout << "youhoo 👋" << endl;
+    cout << "Bye 👋" << endl;
     return 0;
 }
 
