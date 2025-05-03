@@ -4,7 +4,7 @@
 
 //this currenly check when user tries to create a file, see if file already exist under same user
 //have this also just check if file exist
-bool fileExist(string filename, string checkFileName, bool forCreate  ,int checkId ){
+bool fileExist(filesystem::path filename, string checkFileName, bool forCreate  ,int checkId ){
     fstream data(filename, ios::in);
     if(data.is_open()){
         string line;
@@ -43,7 +43,6 @@ bool fileExist(string filename, string checkFileName, bool forCreate  ,int check
     return false;
 }
 
-
 void Create(User& currentUser){
     string fileName; //for structa
     string privacy;
@@ -57,7 +56,7 @@ void Create(User& currentUser){
     do {
         cout << "Name of file: ";
         cin >> fileName;
-        thisFileExist = fileExist("userFiles.csv",  fileName, true, currentUser.id);
+        thisFileExist = fileExist(userFiles, fileName, true, currentUser.id);
         
         if(thisFileExist){ //true
             cout << fileName << " already exist. Try again!" << endl;
@@ -76,7 +75,7 @@ void Create(User& currentUser){
     } while (privacy != "a" && privacy != "b");
     
     //append file name
-    data.open("userFiles.csv", ios::out | ios::app);
+    data.open(userFiles, ios::out | ios::app);
      
      if(data.is_open()){
          data << to_string(currentUser.id) + "," + currentUser.username + "," + (fileName + ".txt")+ "," + (privacy == "a" ? privacy = "public" : privacy = "private") + "\n";
@@ -86,7 +85,6 @@ void Create(User& currentUser){
          cout << "Trouble opening file :(" << endl;
      }
     
-    //store inside its own function 🥹?
     //create file
      data.open((fileName + ".txt"), ios::out | ios::app);
     if(data.is_open()){
@@ -123,3 +121,8 @@ void Create(User& currentUser){
      data.close();
      }
 }
+
+//flashcard
+//|_data
+//|_utils
+//|_main.cpp

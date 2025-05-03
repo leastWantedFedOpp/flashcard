@@ -4,6 +4,7 @@
 #include "reviewNquiz.hpp"
 #include "userAuth.hpp"
 #include "createFile.hpp"
+#include "path.h"
 
 using namespace std;
  
@@ -34,7 +35,7 @@ vector<map<int,Card>> createSet(string& filename){
     return mySet;
 }
 
-void displayFileList(string filename, User& currentUser){
+void displayFileList(filesystem::path filename, User& currentUser){
     fstream data(filename, ios::in);
     char userInput = '\0';
     cout << "a. My notes\nb. All notes" << endl;
@@ -83,7 +84,6 @@ void displayFileList(string filename, User& currentUser){
                     cout << file << " - " << currentUser.username << endl;
                 }
             }
-            
             cout << "- - -" << endl;
         } else if (userInput == 'b') {
             cout << "My Notes" << endl;
@@ -106,7 +106,6 @@ void displayFileList(string filename, User& currentUser){
                     cout << file << endl;
                 }
             }
-            
             cout << "- - -" << endl;
         }
         data.close();
@@ -121,13 +120,13 @@ void review(User& currentUser){
     vector<map<int,Card>> mySet;
     
     cout << "+*+ Review +*+" << endl;
-    displayFileList("userFiles.csv", currentUser);
+    displayFileList(userFiles, currentUser);
     cout << "Type the name of file you want to review from" << endl;
     
     do {
         cout << "-> ";
         cin >> reviewFileName;
-        thisFileExist = fileExist("userFiles.csv", reviewFileName, false,  currentUser.id);
+        thisFileExist = fileExist(userFiles, reviewFileName, false,  currentUser.id);
         
         if(!thisFileExist){ //true
             cout << reviewFileName << " does not exist. Try again!" << endl;
@@ -160,20 +159,20 @@ void quiz(User& currentUser){
     vector<map<int,Card>> mySet; //list of map
     
     cout << "+*+ Quiz +*+" << endl;
-    displayFileList("userFiles.csv", currentUser);
+    displayFileList(userFiles, currentUser);
     cout << "Type the name of file you want to quiz from" << endl;
     
     do {
         cout << "-> ";
         cin >> quizFileName;
-        thisFileExist = fileExist("userFiles.csv", quizFileName, false,  currentUser.id);
+        thisFileExist = fileExist(userFiles, quizFileName, false,  currentUser.id);
         
         if(!thisFileExist){ //true
             cout << quizFileName << " does not exist. Try again!" << endl;
         }
     } while (!thisFileExist);
     
-    fileExist("userFiles.csv", quizFileName, false,  currentUser.id);
+    fileExist(userFiles, quizFileName, false,  currentUser.id);
     cout << "Opening " << (quizFileName + ".txt") << endl;
     mySet = createSet(quizFileName);
     

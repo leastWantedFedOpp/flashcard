@@ -1,6 +1,7 @@
 #ifndef createFile_hpp
 #define createFile_hpp
 #include "userAuth.hpp" //for User struct
+#include "path.h"
 #include <stdio.h>
 
 struct File{
@@ -8,7 +9,7 @@ struct File{
     string privacy;
 };
 
-bool fileExist(string , string, bool, int);
+bool fileExist(filesystem::path , string, bool, int);
 
 void Create(User&);
 

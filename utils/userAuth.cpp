@@ -12,8 +12,8 @@ int genUserId(){
     return randGenUserId;
 }
 
-void displayUsers(string filename, fstream& data){
-    data.open(filename, ios::in);
+void displayUsers(filesystem::path filename){
+    fstream data(filename, ios::in);
     if(data.is_open()){
         string line;
         getline(data, line);
@@ -34,8 +34,8 @@ void displayUsers(string filename, fstream& data){
     }
 }
 
-bool userExist(string filename, fstream& data, string nameInput, string passwordInput, User& currentUser, bool login){
-    data.open(filename, ios::in);
+bool userExist(filesystem::path filename, string nameInput, string passwordInput, User& currentUser, bool login){
+    fstream data(filename, ios::in);
     if(data.is_open()){
         string line;
         getline(data, line);
@@ -70,14 +70,14 @@ bool userExist(string filename, fstream& data, string nameInput, string password
     return false;
 }
 
-void logIn(string filename, fstream& data, User& currentUser, bool& isAuthenticated){
+void logIn(filesystem::path filename, User& currentUser, bool& isAuthenticated){
     string username, password;
     cout << "Log in" << endl;
     cout << "Username: ";
     cin >> username;
     cout << "Password: ";
     cin >> password;
-    if(!userExist(filename, data, username, password, currentUser , true)){
+    if(!userExist(filename, username, password, currentUser , true)){
         cout << "Unable to Log in. Please try again." << endl;
     } else {
         isAuthenticated = true;
@@ -85,7 +85,7 @@ void logIn(string filename, fstream& data, User& currentUser, bool& isAuthentica
     }
 }
 
-void createAccount(string filename, fstream& data, User& currentUser){
+void createAccount(filesystem::path filename, User& currentUser){
     int id;
     string username, password;
             
@@ -94,8 +94,8 @@ void createAccount(string filename, fstream& data, User& currentUser){
     cout << "Username: ";
     cin >> username;
     
-    if(!userExist(filename, data, username, "", currentUser, false)){ //if user exist, userExist() return true
-        data.open(filename, ios::out | ios::app); //open file to append
+    if(!userExist(filename, username, "", currentUser, false)){ //if user exist, userExist() return true
+        fstream data(filename, ios::out | ios::app); //open file to append
 
         cout << "Password: ";
         cin >> password; //create password

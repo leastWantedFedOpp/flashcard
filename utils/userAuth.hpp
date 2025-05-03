@@ -15,12 +15,12 @@ struct UserAuth{
     string password;
 };
 
-void displayUsers(string, fstream&);
+void displayUsers(filesystem::path );
 
-bool userExist(string , fstream& , string , string , User& , bool );
+bool userExist(filesystem::path , string , string , User& , bool );
 
-void logIn(string , fstream& , User& , bool& );
+void logIn(filesystem::path , User& , bool& );
 
-void createAccount(string , fstream& , User& );
+void createAccount(filesystem::path , User& );
 
 #endif /* userAuth_hpp */

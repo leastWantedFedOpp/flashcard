@@ -10,22 +10,6 @@
 
 using namespace std;
 
-//void update(){
-    /*
-     current user
-     display all files
-        - or display files that beling to user
-     choose a file
-     read content inside file
-     ask user to add/replace/delete
-        - if add, ios::append then just append
-        - if replace/change, choose number based on number,
-            choose new content, then replace with old content?
-        - if delete, then its a pain in the ass T.T
-     */
-//}
-
-
 int main(int argc, const char * argv[]) {
     char userInput = '\0';
     char userInput2 = '\0';
@@ -35,25 +19,40 @@ int main(int argc, const char * argv[]) {
     
     cout << "Current working directory: " << filesystem::current_path() << endl;
     fstream data;
+    
+    filesystem::path root = filesystem::path(__FILE__).parent_path();
+    cout << root << endl;
+    filesystem::path userFiles = root / "userInfo" / "userFiles.csv"; //list of files that belong to users
+    filesystem::path userList = root / "userInfo" / "userList.csv"; //list of users
 
-//  to reset
-//    data.open("userFiles.csv", ios::out);
+    filesystem::path userData = root / "userData"; //throw all users .txt fils here.
+
+//    data.open(userList, ios::out);
+//    if(data.is_open()){
+//        data << "Id, Username, Password\n";;
+//        data.close();
+//    } else {
+//        cout << "Trouble opening file :(" << endl;
+//    }
+    
+//    data.open(userFiles, ios::out);
 //    if(data.is_open()){
 //        data << "Author Id, Author Name, Note, Privacy Setting\n";;
 //        data.close();
-//        cout << "Successfully Created :)" << endl;
+//    } else {
+//        cout << "Trouble opening file :(" << endl;
 //    }
-
+    
     while (running) {
         cout << "FlashCard" << endl;
         while (userInput != 'c') {
-            cout << "a. Login\nb. Create an account\nc. Exit" << endl;
+            cout << "a. Login\nb. Create an account\nc. Exit\nd. display users" << endl;
             cout << "-> ";
             cin >> userInput;
             
             switch (userInput) {
                 case 'a':
-                    logIn("userList.csv", data, currentUser, isAuthenticated);
+                    logIn(userList, currentUser, isAuthenticated);
                     while (isAuthenticated){
                         cout << "Hello, " << currentUser.username << endl;
                         cout << "Please select one: " << endl;
@@ -67,7 +66,7 @@ int main(int argc, const char * argv[]) {
                         } else if (userInput2 == 'c'){
                             quiz(currentUser);
                         } else if (userInput2 == 'd'){
-                            displayFileList("userFiles.csv", currentUser);
+                            displayFileList(userFiles, currentUser);
                         } else if (userInput2 == 'e'){
                             cout << "Logging out..." << endl;
                             currentUser = {0,""};
@@ -76,11 +75,14 @@ int main(int argc, const char * argv[]) {
                     }
                     break;
                 case 'b':
-                    createAccount("userList.csv", data, currentUser);
+                    createAccount(userList, currentUser);
                     break;
                 case 'c':
                     cout << "Exiting..." << endl;
                     running = false;
+                    break;
+                case 'd':
+                    displayUsers(userList);
                     break;
                 default:
                     cout << "Invalid input" << endl;
@@ -91,15 +93,6 @@ int main(int argc, const char * argv[]) {
     cout << "Bye 👋" << endl;
     return 0;
 }
-
-/*
- manage file/folder
- |_data
-    |_.csv
-    |_.txt
- |_utils
- |_main.cpp and others
- */
 
 /*
  work on:
