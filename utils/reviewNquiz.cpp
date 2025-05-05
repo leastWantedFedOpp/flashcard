@@ -1,13 +1,15 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+
+//.h or .hpp files
+#include "path.hpp"
 #include "reviewNquiz.hpp"
 #include "userAuth.hpp"
 #include "createFile.hpp"
-#include "path.h"
 
 using namespace std;
- 
+
 vector<map<int,Card>> createSet(string& filename){
      vector<map<int,Card>> mySet; //list of map
      map<int,Card> cardMap; //map with int, and card struct
@@ -24,7 +26,7 @@ vector<map<int,Card>> createSet(string& filename){
              myCard.question = line;
              myCard.answer = line2;
              
-             cardMap.insert(make_pair(lineNo, Card{myCard.question, myCard.answer})); //create a map with pair of int and Card struct that holds question and answer
+             cardMap.insert(make_pair(lineNo, Card{myCard.question, myCard.answer})); // create a map with pair of int and Card struct that holds question and answer
              mySet.push_back(cardMap); //add the card inse the vector
              cardMap.clear();
              lineNo++;
@@ -36,9 +38,9 @@ vector<map<int,Card>> createSet(string& filename){
 }
 
 void displayFileList(filesystem::path filename, User& currentUser){
-    fstream data(filename, ios::in);
+    fstream data(filename, ios::in); // open userList.csv from userInfo directory
     char userInput = '\0';
-    cout << "a. My notes\nb. All notes" << endl;
+    cout << "a. My notes\nb. All notes" << endl; // type name of note to view
     do {
         cout << "-> ";
         cin >> userInput;
@@ -48,6 +50,7 @@ void displayFileList(filesystem::path filename, User& currentUser){
         }
     } while (userInput != 'a' && userInput != 'b');
     
+    // store name of txt files inside two vector, so it can be displayed to user based on input above
     if(data.is_open()){
         vector<string> myFiles;
         vector<string> publicFiles;
@@ -114,6 +117,7 @@ void displayFileList(filesystem::path filename, User& currentUser){
     }
 }
 
+// read file, create set, dispaly for user to review
 void review(User& currentUser){
     string reviewFileName;
     bool thisFileExist;
@@ -149,6 +153,7 @@ void review(User& currentUser){
     
 }
 
+// read file, create set, quiz users
 void quiz(User& currentUser){
     string quizFileName;
     string userAnswer;

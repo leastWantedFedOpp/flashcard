@@ -1,15 +1,16 @@
 #include <iostream>
 #include <fstream>
+
+//.h or .hpp files
 #include "createFile.hpp"
 
-//this currenly check when user tries to create a file, see if file already exist under same user
-//have this also just check if file exist
+// loggedIn: this check when user tries to create a file, see if file already exist under same user
+// !logggedIN: check if file exist
 bool fileExist(filesystem::path filename, string checkFileName, bool forCreate  ,int checkId ){
     fstream data(filename, ios::in);
     if(data.is_open()){
         string line;
         getline(data, line);
-   //        cout << line <<  "\n";
         while(getline(data, line, ',')){
             if(line.empty()) continue;
             File viewFile;
@@ -22,7 +23,6 @@ bool fileExist(filesystem::path filename, string checkFileName, bool forCreate  
             viewFile.privacy = line; //privacy
             
             //the purpose of this is to check if the currentUser already has a file named x to avoid duplication
-            
             //check is user exist and if the fileName currently readin matches with checkFileName is same line :P
             if(forCreate){
                 if(authorId == checkId && viewFile.fileName == (checkFileName + ".txt")){
@@ -44,12 +44,10 @@ bool fileExist(filesystem::path filename, string checkFileName, bool forCreate  
 }
 
 void Create(User& currentUser){
-    string fileName; //for structa
+    string fileName;
     string privacy;
     string question, answer; //for QnA to append inside a text file
     bool thisFileExist;
-    
-    fstream data;
     
     cout << "Create." << endl;
     
@@ -74,9 +72,8 @@ void Create(User& currentUser){
         
     } while (privacy != "a" && privacy != "b");
     
-    //append file name
-    data.open(userFiles, ios::out | ios::app);
-     
+    //append file info to userFiles.csv inside userInfo directory
+    fstream data(userFiles, ios::out | ios::app);
      if(data.is_open()){
          data << to_string(currentUser.id) + "," + currentUser.username + "," + (fileName + ".txt")+ "," + (privacy == "a" ? privacy = "public" : privacy = "private") + "\n";
          cout << "File successfully added :)" << endl;
@@ -85,8 +82,9 @@ void Create(User& currentUser){
          cout << "Trouble opening file :(" << endl;
      }
     
-    //create file
-     data.open((fileName + ".txt"), ios::out | ios::app);
+//     data.open((fileName + ".txt"), ios::out | ios::app);
+    //append a txt file to userData directory
+    data.open((userData), ios::out | ios::app);
     if(data.is_open()){
         char userInput = '\0';
         int count = 1;
@@ -117,12 +115,7 @@ void Create(User& currentUser){
             }
     }
     
-    cout << (fileName + ".txt") << " successfully created" << endl;
+    cout << (fileName + ".txt") << " successfully created in " << userData << endl;
      data.close();
      }
 }
-
-//flashcard
-//|_data
-//|_utils
-//|_main.cpp

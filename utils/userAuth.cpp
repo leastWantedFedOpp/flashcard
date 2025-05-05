@@ -2,6 +2,8 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
+
+//.h or .hpp files
 #include "userAuth.hpp"
 
 using namespace std;
@@ -14,6 +16,7 @@ int genUserId(){
 
 void displayUsers(filesystem::path filename){
     fstream data(filename, ios::in);
+    cout << "i am here tho, cant open " << filename <<  endl;
     if(data.is_open()){
         string line;
         getline(data, line);

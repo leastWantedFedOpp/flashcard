@@ -1,7 +1,8 @@
 #ifndef createFile_hpp
 #define createFile_hpp
+
 #include "userAuth.hpp" //for User struct
-#include "path.h"
+#include "path.hpp"
 #include <stdio.h>
 
 struct File{

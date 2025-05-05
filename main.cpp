@@ -4,6 +4,8 @@
 #include <map>
 #include <utility>
 
+//.h or .hpp files
+#include "utils/path.hpp"
 #include "utils/userAuth.hpp"
 #include "utils/createFile.hpp"
 #include "utils/reviewNquiz.hpp"
@@ -18,31 +20,24 @@ int main(int argc, const char * argv[]) {
     User currentUser = {0,""}; //id set to 0, username set to empty string
     
     cout << "Current working directory: " << filesystem::current_path() << endl;
-    fstream data;
     
-    filesystem::path root = filesystem::path(__FILE__).parent_path();
-    cout << root << endl;
-    filesystem::path userFiles = root / "userInfo" / "userFiles.csv"; //list of files that belong to users
-    filesystem::path userList = root / "userInfo" / "userList.csv"; //list of users
-
-    filesystem::path userData = root / "userData"; //throw all users .txt fils here.
-
-//    data.open(userList, ios::out);
-//    if(data.is_open()){
-//        data << "Id, Username, Password\n";;
-//        data.close();
-//    } else {
-//        cout << "Trouble opening file :(" << endl;
-//    }
+    fstream data(userList, ios::out);
+    cout << userList << " cant open?" << endl;
+    if(data.is_open()){
+        data << "Id, Username, Password\n";;
+        data.close();
+    } else {
+        cout << "Trouble opening file :(" << endl;
+    }
     
-//    data.open(userFiles, ios::out);
+//    fstream data(userFiles, ios::out);
 //    if(data.is_open()){
 //        data << "Author Id, Author Name, Note, Privacy Setting\n";;
 //        data.close();
 //    } else {
 //        cout << "Trouble opening file :(" << endl;
 //    }
-    
+//    
     while (running) {
         cout << "FlashCard" << endl;
         while (userInput != 'c') {
@@ -59,18 +54,28 @@ int main(int argc, const char * argv[]) {
                         cout << "a. Create\nb. Review\nc. Quiz\nd. Display files\ne. Logout" << endl;
                         cout << "-> ";
                         cin >> userInput2;
-                        if (userInput2 == 'a') {
-                            Create(currentUser);
-                        } else if(userInput2 == 'b'){
-                            review(currentUser);
-                        } else if (userInput2 == 'c'){
-                            quiz(currentUser);
-                        } else if (userInput2 == 'd'){
-                            displayFileList(userFiles, currentUser);
-                        } else if (userInput2 == 'e'){
-                            cout << "Logging out..." << endl;
-                            currentUser = {0,""};
-                            isAuthenticated = false;
+                        
+                        switch (userInput2) {
+                            case 'a':
+                                Create(currentUser);
+                                break;
+                            case 'b':
+                                review(currentUser);
+                                break;
+                            case 'c':
+                                quiz(currentUser);
+                                break;
+                            case 'd':
+                                displayFileList(userFiles, currentUser);
+                                break;
+                            case 'e':
+                                cout << "Logging out..." << endl;
+                                currentUser = {0,""};
+                                isAuthenticated = false;
+                                break;
+                            default:
+                                cout << "Invalid Input" << endl;
+                                break;
                         }
                     }
                     break;

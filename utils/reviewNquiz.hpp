@@ -2,7 +2,7 @@
 #define reviewNquiz_hpp
 
 #include "userAuth.hpp"
-#include "path.h"
+//#include "path.h"
 
 #include <stdio.h>
 
@@ -13,7 +13,7 @@ struct Card{
 
 vector<map<int,Card>> createSet(string&);
 
-void displayFileList(string , User& );
+void displayFileList(filesystem::path , User& );
 
 void review(User& );
 
