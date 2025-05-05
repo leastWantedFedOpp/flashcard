@@ -84,7 +84,7 @@ void Create(User& currentUser){
     
 //     data.open((fileName + ".txt"), ios::out | ios::app);
     //append a txt file to userData directory
-    data.open((userData), ios::out | ios::app);
+    data.open((userData / (fileName + ".txt")), ios::out | ios::app);
     if(data.is_open()){
         char userInput = '\0';
         int count = 1;

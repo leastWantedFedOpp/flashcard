@@ -42,7 +42,6 @@ bool userExist(filesystem::path filename, string nameInput, string passwordInput
     if(data.is_open()){
         string line;
         getline(data, line);
-//        cout << line <<  "\n";
         while(getline(data, line, ',')){
             if(line.empty()) continue;
             UserAuth user;

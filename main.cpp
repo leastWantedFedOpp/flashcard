@@ -19,25 +19,6 @@ int main(int argc, const char * argv[]) {
     bool running = true;
     User currentUser = {0,""}; //id set to 0, username set to empty string
     
-    cout << "Current working directory: " << filesystem::current_path() << endl;
-    
-    fstream data(userList, ios::out);
-    cout << userList << " cant open?" << endl;
-    if(data.is_open()){
-        data << "Id, Username, Password\n";;
-        data.close();
-    } else {
-        cout << "Trouble opening file :(" << endl;
-    }
-    
-//    fstream data(userFiles, ios::out);
-//    if(data.is_open()){
-//        data << "Author Id, Author Name, Note, Privacy Setting\n";;
-//        data.close();
-//    } else {
-//        cout << "Trouble opening file :(" << endl;
-//    }
-//    
     while (running) {
         cout << "FlashCard" << endl;
         while (userInput != 'c') {

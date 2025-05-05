@@ -15,7 +15,7 @@ vector<map<int,Card>> createSet(string& filename){
      map<int,Card> cardMap; //map with int, and card struct
      Card myCard; //card struct w/question n answer
      
-    fstream data((filename + ".txt"), ios::in);
+    fstream data((userData / (filename + ".txt")), ios::in);
      if(data.is_open()){
          string line;
          string line2;
@@ -25,7 +25,6 @@ vector<map<int,Card>> createSet(string& filename){
              getline(data, line2);
              myCard.question = line;
              myCard.answer = line2;
-             
              cardMap.insert(make_pair(lineNo, Card{myCard.question, myCard.answer})); // create a map with pair of int and Card struct that holds question and answer
              mySet.push_back(cardMap); //add the card inse the vector
              cardMap.clear();
@@ -38,7 +37,7 @@ vector<map<int,Card>> createSet(string& filename){
 }
 
 void displayFileList(filesystem::path filename, User& currentUser){
-    fstream data(filename, ios::in); // open userList.csv from userInfo directory
+    fstream data((userData / (filename)), ios::in); // open userList.csv from userInfo directory
     char userInput = '\0';
     cout << "a. My notes\nb. All notes" << endl; // type name of note to view
     do {
